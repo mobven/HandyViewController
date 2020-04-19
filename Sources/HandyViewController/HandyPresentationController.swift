@@ -46,10 +46,6 @@ final class HandyPresentationController: UIPresentationController {
         ).height
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
     private func updateTopDistance() {
         guard let container = containerView else { return }
         
