@@ -211,11 +211,9 @@ extension HandyPresentationController: HandyScrollViewDelegate {
     func handyScrollViewDidSetContentSize(_ scrollView: UIScrollView) {
         scrollView.layoutIfNeeded()
         let scrollViewContentHeight = scrollView.contentSize.height
-        var scrollViewHeightConstant: CGFloat
+        var scrollViewHeightConstant = scrollViewContentHeight
         if UIScreen.main.bounds.height - scrollViewContentHeight - contentHeight - safeAreaBottomInset < 0 {
             scrollViewHeightConstant = UIScreen.main.bounds.height - contentHeight - safeAreaBottomInset
-        } else {
-            scrollViewHeightConstant = scrollViewContentHeight - safeAreaBottomInset
         }
         scrollView.heightAnchor.constraint(equalToConstant: scrollViewHeightConstant).isActive = true
         contentHeight += scrollViewContentHeight
