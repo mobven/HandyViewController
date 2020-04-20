@@ -64,11 +64,23 @@ final class HandyPresentationController: UIPresentationController {
         }
     }
     
+    private var minimumTopDistance: CGFloat {
+        return safeAreaTopInset
+    }
+    
     private var safeAreaBottomInset: CGFloat {
         if #available(iOS 11.0, *) {
             return presentingViewController.view.safeAreaInsets.bottom
         } else {
             return 0
+        }
+    }
+    
+    private var safeAreaTopInset: CGFloat {
+        if #available(iOS 11.0, *) {
+            return presentingViewController.view.safeAreaInsets.top
+        } else {
+            return 20
         }
     }
     
@@ -81,41 +93,42 @@ final class HandyPresentationController: UIPresentationController {
     }
     
     private var topDistance: CGFloat {
-        let distance = UIScreen.main.bounds.height - contentHeight - safeAreaBottomInset
+        let distance = UIScreen.main.bounds.height - contentHeight + minimumTopDistance
         if distance < 0 {
-            return 0
+            return minimumTopDistance
         }
         return distance
     }
     
     // MARK: - Gestures
     @objc func didPan(_ panGesture: UIPanGestureRecognizer) {
-        guard let view = panGesture.view, let contentView = view.superview,
-            let presented = presentedView, let container = containerView else { return }
+        guard let view = panGesture.view, let contentView = view.superview else { return }
         let translation = panGesture.translation(in: contentView)
         
         if panGesture.state == .changed {
             guard translation.y > 0 else { return }
-            animatePanChange(translationY: translation.y, contentView: presented, view: container)
+            animatePanChange(translationY: translation.y)
         } else if panGesture.state == .ended {
             let velocity = panGesture.velocity(in: contentView)
-            animatePanEnd(velocityCheck: velocity.y >= 1500, contentView: presented, view: container)
+            animatePanEnd(velocityCheck: velocity.y >= 1500)
         }
     }
     
-    private func animatePanChange(translationY: CGFloat, contentView: UIView, view: UIView) {
-        contentView.frame.origin.y = view.frame.height - contentView.frame.height + translationY * 0.7 // speed
-        let yVal = (UIScreen.main.bounds.height - contentView.frame.origin.y) / contentView.frame.height
+    private func animatePanChange(translationY: CGFloat) {
+        guard let presented = presentedView else { return }
+        presented.frame.origin.y = topDistance + translationY * 0.7 // speed
+        let yVal = (UIScreen.main.bounds.height - presented.frame.origin.y) / presented.frame.height
         backgroundDimView.backgroundColor = UIColor(
             white: 0, alpha: yVal - maxBackgroundOpacity
         )
     }
     
-    private func animatePanEnd(velocityCheck: Bool, contentView: UIView, view: UIView) {
+    private func animatePanEnd(velocityCheck: Bool) {
+        guard let presented = presentedView else { return }
         if velocityCheck {
-            dismiss(contentView: contentView)
-        } else if (UIScreen.main.bounds.height - contentView.frame.origin.y) < contentView.frame.height / 2 {
-            dismiss(contentView: contentView)
+            dismiss()
+        } else if (UIScreen.main.bounds.height - presented.frame.origin.y) < presented.frame.height / 2 {
+            dismiss()
         } else {
             isSwipableAnimating = true
             UIView.animate(
@@ -125,8 +138,9 @@ final class HandyPresentationController: UIPresentationController {
                 initialSpringVelocity: 0.8,
                 options: .curveEaseInOut, animations: { [ weak self ] in
                     guard let self = self else { return }
-                    contentView.frame.origin = CGPoint(
-                        x: 0, y: self.topDistance + self.safeAreaBottomInset
+                    guard let presented = self.presentedView else { return }
+                    presented.frame.origin = CGPoint(
+                        x: 0, y: self.topDistance - self.safeAreaBottomInset
                     )
                     self.backgroundDimView.backgroundColor = UIColor(
                         white: 0, alpha: self.maxBackgroundOpacity
@@ -137,12 +151,14 @@ final class HandyPresentationController: UIPresentationController {
         }
     }
     
-    private func dismiss(contentView: UIView) {
+    private func dismiss() {
         isSwipableAnimating = true
-        UIView.animate(withDuration: 0.2, animations: {
+        UIView.animate(withDuration: 0.2, animations: { [ weak self ] in
+            guard let self = self else { return }
+            guard let presented = self.presentedView else { return }
             self.backgroundDimView.alpha = 0
-            contentView.frame.origin = CGPoint(
-                x: contentView.frame.origin.x,
+            presented.frame.origin = CGPoint(
+                x: presented.frame.origin.x,
                 y: UIScreen.main.bounds.height
             )
         }, completion: { [ weak self ] (isCompleted) in
@@ -168,8 +184,6 @@ final class HandyPresentationController: UIPresentationController {
     override var frameOfPresentedViewInContainerView: CGRect {
         guard let container = containerView else { return .zero }
         
-        updateTopDistance()
-        
         return CGRect(x: 0, y: 0, width: container.bounds.width, height: UIScreen.main.bounds.height)
     }
     
@@ -181,9 +195,13 @@ final class HandyPresentationController: UIPresentationController {
         container.addSubview(backgroundDimView)
         backgroundDimView.addSubview(presentedViewController.view)
         
+        updateTopDistance()
+        
         coordinator.animate(alongsideTransition: { [ weak self ] _ in
             self?.backgroundDimView.alpha = 1
-            }, completion: nil)
+            }, completion: { [ weak self ] _ in
+                self?.animatePanEnd(velocityCheck: false)
+        })
     }
     
     override func dismissalTransitionWillBegin() {
@@ -207,30 +225,34 @@ extension HandyPresentationController: HandyScrollViewDelegate {
     func handyScrollViewDidSetContentSize(_ scrollView: UIScrollView) {
         scrollView.layoutIfNeeded()
         let scrollViewContentHeight = scrollView.contentSize.height
-        var scrollViewHeightConstant = scrollViewContentHeight
-        if UIScreen.main.bounds.height - scrollViewContentHeight - contentHeight - safeAreaBottomInset < 0 {
-            scrollViewHeightConstant = UIScreen.main.bounds.height - contentHeight - safeAreaBottomInset
+        if contentHeight + scrollViewContentHeight + minimumTopDistance > UIScreen.main.bounds.height {
+            scrollView.heightAnchor.constraint(
+                equalToConstant: UIScreen.main.bounds.height - contentHeight - minimumTopDistance
+            ).isActive = true
+            contentHeight = UIScreen.main.bounds.height - minimumTopDistance
+        } else {
+            scrollView.heightAnchor.constraint(
+                equalToConstant: scrollViewContentHeight
+            ).isActive = true
+            contentHeight += scrollViewContentHeight
         }
-        scrollView.heightAnchor.constraint(equalToConstant: scrollViewHeightConstant).isActive = true
-        contentHeight += scrollViewContentHeight
         updateTopDistance()
     }
     
     func handyScrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard let presented = presentedView, let container = containerView else { return }
         let offset = scrollView.contentOffset
         guard !isSwipableAnimating && offset.y < 0 else { return }
-        animatePanChange(translationY: -offset.y, contentView: presented, view: container)
+        animatePanChange(translationY: -offset.y)
     }
     
     func handyScrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint) {
-        guard let presented = presentedView, let container = containerView else { return }
         guard scrollView.contentOffset.y < 0 else { return }
         if scrollView.contentOffset.y < -130 {
-            dismiss(contentView: presented)
+            dismiss()
         } else {
-            animatePanEnd(velocityCheck: velocity.y < -1.6, contentView: presented, view: container)
+            animatePanEnd(velocityCheck: velocity.y < -1.6)
         }
     }
     
 }
+
