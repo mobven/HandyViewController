@@ -37,4 +37,14 @@ class ViewController: UIViewController {
         present(controller, animated: true, completion: nil)
     }
     
+    @IBAction private func presentVeryShortHandyViewController() {
+        let controller = UIStoryboard(
+            name: "Main", bundle: nil
+        ).instantiateViewController(withIdentifier: "VeryShortHandyViewController")
+        detailsTransitioningDelegate = HandyTransitioningDelegate(from: self, to: controller)
+        controller.modalPresentationStyle = .custom
+        controller.transitioningDelegate = detailsTransitioningDelegate
+        present(controller, animated: true, completion: nil)
+    }
+    
 }

@@ -127,7 +127,7 @@ final class HandyPresentationController: UIPresentationController {
         guard let presented = presentedView else { return }
         if velocityCheck {
             dismiss()
-        } else if (UIScreen.main.bounds.height - presented.frame.origin.y) < presented.frame.height / 2 {
+        } else if (UIScreen.main.bounds.height - presented.frame.origin.y + minimumTopDistance) < presented.frame.height / 2 {
             dismiss()
         } else {
             isSwipableAnimating = true
