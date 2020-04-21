@@ -12,6 +12,7 @@ final class HandyPresentationController: UIPresentationController {
     
     private let maxBackgroundOpacity: CGFloat = 0.5
     private var contentHeight: CGFloat!
+    private var scrollViewHeight: CGFloat = 0
     private var isSwipableAnimating: Bool = false
     
     private lazy var backgroundDimView: UIView! = {
@@ -27,6 +28,7 @@ final class HandyPresentationController: UIPresentationController {
     }()
     
     private weak var topConstraint: NSLayoutConstraint?
+    private weak var scrollViewHeightConstraint: NSLayoutConstraint?
     
     override init(presentedViewController: UIViewController,
                   presenting presentingViewController: UIViewController?) {
@@ -93,7 +95,7 @@ final class HandyPresentationController: UIPresentationController {
     }
     
     private var topDistance: CGFloat {
-        let distance = UIScreen.main.bounds.height - contentHeight + minimumTopDistance
+        let distance = UIScreen.main.bounds.height - contentHeight - scrollViewHeight + minimumTopDistance
         if distance < 0 {
             return minimumTopDistance
         }
@@ -116,7 +118,7 @@ final class HandyPresentationController: UIPresentationController {
     
     private func animatePanChange(translationY: CGFloat) {
         guard let presented = presentedView else { return }
-        presented.frame.origin.y = topDistance + translationY * 0.7 // speed
+        presented.frame.origin.y = topDistance - self.safeAreaBottomInset + translationY * 0.7 // speed
         let yVal = (UIScreen.main.bounds.height - presented.frame.origin.y) / presented.frame.height
         backgroundDimView.backgroundColor = UIColor(
             white: 0, alpha: yVal - maxBackgroundOpacity
@@ -146,7 +148,6 @@ final class HandyPresentationController: UIPresentationController {
                         white: 0, alpha: self.maxBackgroundOpacity
                     )
                     self.setSwipableAnimatingWithDelay()
-                    
             })
         }
     }
@@ -161,17 +162,17 @@ final class HandyPresentationController: UIPresentationController {
                 x: presented.frame.origin.x,
                 y: UIScreen.main.bounds.height
             )
-        }, completion: { [ weak self ] (isCompleted) in
-            if isCompleted {
-                self?.presentedViewController.dismiss(animated: false, completion: nil)
-            } else {
-                self?.setSwipableAnimatingWithDelay()
-            }
+            }, completion: { [ weak self ] (isCompleted) in
+                if isCompleted {
+                    self?.presentedViewController.dismiss(animated: false, completion: nil)
+                } else {
+                    self?.setSwipableAnimatingWithDelay()
+                }
         })
     }
     
     private func setSwipableAnimatingWithDelay() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: { [ weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: { [ weak self] in
             self?.isSwipableAnimating = false
         })
     }
@@ -195,10 +196,9 @@ final class HandyPresentationController: UIPresentationController {
         container.addSubview(backgroundDimView)
         backgroundDimView.addSubview(presentedViewController.view)
         
-        updateTopDistance()
-        
         coordinator.animate(alongsideTransition: { [ weak self ] _ in
             self?.backgroundDimView.alpha = 1
+            self?.updateTopDistance()
             }, completion: { [ weak self ] _ in
                 self?.animatePanEnd(velocityCheck: false)
         })
@@ -224,19 +224,8 @@ extension HandyPresentationController: HandyScrollViewDelegate {
     
     func handyScrollViewDidSetContentSize(_ scrollView: UIScrollView) {
         scrollView.layoutIfNeeded()
-        let scrollViewContentHeight = scrollView.contentSize.height
-        if contentHeight + scrollViewContentHeight + minimumTopDistance > UIScreen.main.bounds.height {
-            scrollView.heightAnchor.constraint(
-                equalToConstant: UIScreen.main.bounds.height - contentHeight - minimumTopDistance
-            ).isActive = true
-            contentHeight = UIScreen.main.bounds.height - minimumTopDistance
-        } else {
-            scrollView.heightAnchor.constraint(
-                equalToConstant: scrollViewContentHeight
-            ).isActive = true
-            contentHeight += scrollViewContentHeight
-        }
-        updateTopDistance()
+        scrollView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
+        setScrollViewHeight(scrollView)
     }
     
     func handyScrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -254,5 +243,40 @@ extension HandyPresentationController: HandyScrollViewDelegate {
         }
     }
     
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?,
+                               change: [NSKeyValueChangeKey: Any]?,
+                               context: UnsafeMutableRawPointer?) {
+        if keyPath == "contentSize" {
+            if let scrollView = object as? UIScrollView {
+                setScrollViewHeight(scrollView)
+            }
+        }
+    }
+    
+    private func setScrollViewHeight(_ scrollView: UIScrollView) {
+        let scrollViewContentHeight = scrollView.contentSize.height
+        scrollViewHeight = 0
+        
+        if contentHeight + scrollViewContentHeight + minimumTopDistance > UIScreen.main.bounds.height {
+            scrollViewHeight = UIScreen.main.bounds.height - contentHeight - minimumTopDistance
+        } else {
+            scrollViewHeight = scrollViewContentHeight
+        }
+        
+        if scrollViewHeightConstraint == nil {
+            scrollViewHeightConstraint = scrollView.heightAnchor.constraint(
+                equalToConstant: scrollViewHeight
+            )
+            scrollViewHeightConstraint?.isActive = true
+            updateTopDistance()
+        } else {
+            scrollViewHeightConstraint?.constant = scrollViewHeight
+            topConstraint?.constant = topDistance
+            UIView.animate(withDuration: 0.15) { [ weak self ] in
+                self?.containerView?.layoutIfNeeded()
+            }
+            animatePanEnd(velocityCheck: false)
+        }
+    }
+    
 }
-

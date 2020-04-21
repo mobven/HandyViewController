@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import HandyViewController
 
 final class DetailsViewController: UIViewController {
     
@@ -26,6 +27,13 @@ final class DetailsViewController: UIViewController {
         handyScrollViewDelegate?.handyScrollViewDidSetContentSize(tableView)
     }
     
+    @IBAction func addMoreItems() {
+        for index in 1...3 {
+            data.append("Cell no: \(index)")
+        }
+        tableView.reloadData()
+    }
+    
 }
 
 extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
@@ -41,7 +49,7 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+        return 70
     }
     
 }

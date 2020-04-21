@@ -66,14 +66,15 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vda-Si-jia">
                                 <rect key="frame" x="10" y="84" width="394" height="778"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="252" text="Lorem ipsu" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6jQ-hh-jgh">
-                                        <rect key="frame" x="20" y="20" width="354" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4KG-PL-Vgz">
+                                        <rect key="frame" x="20" y="20" width="354" height="30"/>
+                                        <state key="normal" title="Add more items"/>
+                                        <connections>
+                                            <action selector="addMoreItems" destination="TSc-dY-F88" eventType="touchUpInside" id="Qh1-oX-X9e"/>
+                                        </connections>
+                                    </button>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="NrC-y6-Ucc">
-                                        <rect key="frame" x="0.0" y="60.5" width="394" height="677.5"/>
+                                        <rect key="frame" x="0.0" y="70" width="394" height="668"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="aFH-MZ-68W">
@@ -93,13 +94,13 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
-                                    <constraint firstItem="NrC-y6-Ucc" firstAttribute="top" secondItem="6jQ-hh-jgh" secondAttribute="bottom" constant="20" id="1wm-lj-W7B"/>
                                     <constraint firstItem="NrC-y6-Ucc" firstAttribute="leading" secondItem="Vda-Si-jia" secondAttribute="leading" id="3ZS-wp-8Ha"/>
+                                    <constraint firstItem="4KG-PL-Vgz" firstAttribute="leading" secondItem="Vda-Si-jia" secondAttribute="leading" constant="20" id="4CR-ah-c4b"/>
+                                    <constraint firstAttribute="trailing" secondItem="4KG-PL-Vgz" secondAttribute="trailing" constant="20" id="6dx-mr-eDZ"/>
                                     <constraint firstAttribute="bottom" secondItem="NrC-y6-Ucc" secondAttribute="bottom" priority="990" constant="40" id="AXf-EW-vfR"/>
-                                    <constraint firstAttribute="trailing" secondItem="6jQ-hh-jgh" secondAttribute="trailing" constant="20" id="gCQ-dK-cwz"/>
+                                    <constraint firstItem="4KG-PL-Vgz" firstAttribute="top" secondItem="Vda-Si-jia" secondAttribute="top" constant="20" id="D07-f9-3eV"/>
+                                    <constraint firstItem="NrC-y6-Ucc" firstAttribute="top" secondItem="4KG-PL-Vgz" secondAttribute="bottom" constant="20" id="TDq-Tk-7XF"/>
                                     <constraint firstAttribute="trailing" secondItem="NrC-y6-Ucc" secondAttribute="trailing" id="goZ-Rn-NFQ"/>
-                                    <constraint firstItem="6jQ-hh-jgh" firstAttribute="leading" secondItem="Vda-Si-jia" secondAttribute="leading" constant="20" id="kuL-kb-FLo"/>
-                                    <constraint firstItem="6jQ-hh-jgh" firstAttribute="top" secondItem="Vda-Si-jia" secondAttribute="top" constant="20" id="lYn-4r-U3z"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -118,7 +119,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oMI-Gn-6lu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1078" y="86"/>
+            <point key="canvasLocation" x="1076.8115942028987" y="85.714285714285708"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="Yrd-kp-9hn">
