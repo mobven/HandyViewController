@@ -45,7 +45,7 @@ extension HandyTransitioningDelegate: UIViewControllerTransitioningDelegate {
     ) -> UIPresentationController? {
         var safeAreaInsets: UIEdgeInsets
         if #available(iOS 11.0, *) {
-            safeAreaInsets = source.view.safeAreaInsets
+            safeAreaInsets = UIApplication.shared.keyWindow?.safeAreaInsets ?? source.view.safeAreaInsets
         } else {
             safeAreaInsets = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
         }
