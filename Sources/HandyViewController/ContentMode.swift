@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Content mode of the presented view controller with `HandyTransitioningDelegate`.
 public enum ContentMode {
     /// View controller is displayed according to its content size.
     /// View hierarchy should be from top to bottom with constraints.
