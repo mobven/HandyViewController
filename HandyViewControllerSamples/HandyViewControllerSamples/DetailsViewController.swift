@@ -17,14 +17,10 @@ final class DetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        registerHandyScrollView(tableView)
         for index in 1...21 {
             data.append("Cell no: \(index)")
         }
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        handyScrollViewDelegate?.handyScrollViewDidSetContentSize(tableView)
     }
     
     @IBAction func addMoreItems() {

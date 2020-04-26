@@ -11,12 +11,21 @@ import UIKit
 public final class HandyTransitioningDelegate: NSObject {
     
     internal weak var scrollViewDelegate: HandyScrollViewDelegate?
+    internal weak var scrollViewContentSizeDelegate: HandyScrollViewContentSizeDelegate?
     internal var contentMode: ContentMode = .contentSize
+    internal var scrollView: UIScrollView?
     
     public init(from presented: UIViewController, to presenting: UIViewController,
                 contentMode: ContentMode = .contentSize) {
         super.init()
         self.contentMode = contentMode
+    }
+    
+    internal func registerHandyScrollView(_ scrollView: UIScrollView) {
+        self.scrollView = scrollView
+        if let scrollViewContentSizeDelegate = scrollViewContentSizeDelegate {
+            scrollViewContentSizeDelegate.registerHandyScrollView(scrollView)
+        }
     }
     
 }
@@ -44,7 +53,11 @@ extension HandyTransitioningDelegate: UIViewControllerTransitioningDelegate {
                                                      presenting: presenting,
                                                      safeAreaInsets: safeAreaInsets,
                                                      contentMode: contentMode)
+        scrollViewContentSizeDelegate = controller
         scrollViewDelegate = controller
+        if let scrollView = scrollView {
+            scrollViewContentSizeDelegate?.registerHandyScrollView(scrollView)
+        }
         return controller
     }
     

@@ -243,14 +243,18 @@ final class HandyPresentationController: UIPresentationController {
     
 }
 
-extension HandyPresentationController: HandyScrollViewDelegate {
+extension HandyPresentationController: HandyScrollViewContentSizeDelegate {
     
-    func handyScrollViewDidSetContentSize(_ scrollView: UIScrollView) {
+    func registerHandyScrollView(_ scrollView: UIScrollView) {
         guard contentMode == .contentSize else { return }
         scrollView.layoutIfNeeded()
         scrollView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         setScrollViewHeight(scrollView)
     }
+    
+}
+
+extension HandyPresentationController: HandyScrollViewDelegate {
     
     func handyScrollViewDidScroll(_ scrollView: UIScrollView) {
         let offset = scrollView.contentOffset
