@@ -44,6 +44,9 @@ final class HandyPresentationController: UIPresentationController {
         view.addGestureRecognizer(
             UITapGestureRecognizer(target: self, action: #selector(didTapBackgroundDim(_:)))
         )
+        view.addGestureRecognizer(
+            UIPanGestureRecognizer(target: self, action: #selector(didPan(_:)))
+        )
         
         return view
     }()
