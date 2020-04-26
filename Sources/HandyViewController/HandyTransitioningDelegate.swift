@@ -34,8 +34,15 @@ extension HandyTransitioningDelegate: UIViewControllerTransitioningDelegate {
         presenting: UIViewController?,
         source: UIViewController
     ) -> UIPresentationController? {
+        var safeAreaInsets: UIEdgeInsets
+        if #available(iOS 11.0, *) {
+            safeAreaInsets = source.view.safeAreaInsets
+        } else {
+            safeAreaInsets = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
+        }
         let controller = HandyPresentationController(presentedViewController: presented,
                                                      presenting: presenting,
+                                                     safeAreaInsets: safeAreaInsets,
                                                      contentMode: contentMode)
         scrollViewDelegate = controller
         return controller

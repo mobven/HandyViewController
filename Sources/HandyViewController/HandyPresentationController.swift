@@ -10,13 +10,32 @@ import UIKit
 
 final class HandyPresentationController: UIPresentationController {
     
+    /// Safe area insets of source view controller.
+    private var safeAreaInsets: UIEdgeInsets
+    /// Content mode for the presented view controller.
     private var contentMode: ContentMode = .contentSize
     
     private let maxBackgroundOpacity: CGFloat = 0.5
+    
+    /// Calculated content height of the presented view controller's root view, excluding `scrollViewHeight`.
     private var contentHeight: CGFloat!
+    /// Calculated content height of the scrollView.
     private var scrollViewHeight: CGFloat = 0
+    /// Workaround for scrollView contentSize being called multiple times.
+    /// Default value is -1, indicating, there was no change in content size for last 0.1 second.
+    private var temporaryScrollViewHeight: CGFloat = -1
+    
+    /// Height constraint of the presented view controller's root view.
+    /// Changes depending on `contentHeight` and `scrollViewHeight`
+    private var contentHeightConstraint: NSLayoutConstraint?
+    /// Top constraint of the presented view controller's root view.
+    private weak var topConstraint: NSLayoutConstraint?
+    /// Height constraint of the scroll view. Changes depending on `scrollViewHeight`
+    private weak var scrollViewHeightConstraint: NSLayoutConstraint?
+    
     private var isSwipableAnimating: Bool = false
     
+    /// Background dim view with alpha value `maxBackgroundOpacity`.
     private lazy var backgroundDimView: UIView! = {
         guard let container = containerView else { return nil }
         
@@ -29,14 +48,24 @@ final class HandyPresentationController: UIPresentationController {
         return view
     }()
     
-    private weak var topConstraint: NSLayoutConstraint?
-    private weak var scrollViewHeightConstraint: NSLayoutConstraint?
-    
+    /// Initializes and returns a presentation controller for transitioning between the specified view controllers
+    ///
+    /// - Parameters:
+    ///   - presentedViewController: The view controller being presented modally.
+    ///   - presenting: The view controller whose content represents the starting point of the transition.
+    ///   - safeAreaInsets: Safe area insets of source view controller.
+    ///   Discussion: During initialization, both presented and presenting view controller have zero `safeAreaInsets`,
+    ///   as they're in presentation. That's why, it's added in initializer of `HandyPresentationController`,
+    ///   to receive insets from source controller.
+    ///   - contentMode: Content mode for the presented view controller.
     required init(presentedViewController: UIViewController,
-                  presenting presentingViewController: UIViewController?, contentMode: ContentMode) {
-        super.init(presentedViewController: presentedViewController,
-                   presenting: presentingViewController)
+                  presenting presentingViewController: UIViewController?,
+                  safeAreaInsets: UIEdgeInsets,
+                  contentMode: ContentMode) {
         self.contentMode = contentMode
+        self.safeAreaInsets = safeAreaInsets
+        
+        super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
         
         presentedViewController.view.addGestureRecognizer(
             UIPanGestureRecognizer(target: self, action: #selector(didPan(_:)))
@@ -45,7 +74,7 @@ final class HandyPresentationController: UIPresentationController {
         presentedViewController.view.layer.cornerRadius = 10
         
         if contentMode == .fullScreen {
-            contentHeight = UIScreen.main.bounds.height - 44 // TODO: calculate
+            contentHeight = UIScreen.main.bounds.height - safeAreaInsets.bottom
         } else {
             presentedViewController.view.translatesAutoresizingMaskIntoConstraints = false
             presentedViewController.view.widthAnchor.constraint(
@@ -53,7 +82,11 @@ final class HandyPresentationController: UIPresentationController {
             ).isActive = true
             contentHeight = presentedViewController.view.systemLayoutSizeFitting(
                 UIView.layoutFittingCompressedSize
-            ).height
+            ).height + safeAreaInsets.top
+            contentHeightConstraint = presentedViewController.view.heightAnchor.constraint(
+                equalToConstant: contentHeight
+            )
+            contentHeightConstraint?.isActive = true
         }
     }
     
@@ -62,37 +95,21 @@ final class HandyPresentationController: UIPresentationController {
         
         if topConstraint != nil {
             if topConstraint?.constant != topDistance {
-                topConstraint?.constant = topDistance
-                UIView.animate(withDuration: 0.3) {
+                topConstraint?.constant = topDistance - safeAreaInsets.bottom - safeAreaInsets.top
+                animateDamping {
                     container.layoutIfNeeded()
                 }
             }
         } else {
             topConstraint = presentedViewController.view.topAnchor.constraint(
-                equalTo: topAnchor, constant: topDistance
+                equalTo: topAnchor, constant: topDistance - safeAreaInsets.bottom - safeAreaInsets.top
             )
             topConstraint?.isActive = true
         }
     }
     
     private var minimumTopDistance: CGFloat {
-        return safeAreaTopInset
-    }
-    
-    private var safeAreaBottomInset: CGFloat {
-        if #available(iOS 11.0, *) {
-            return presentingViewController.view.safeAreaInsets.bottom
-        } else {
-            return 0
-        }
-    }
-    
-    private var safeAreaTopInset: CGFloat {
-        if #available(iOS 11.0, *) {
-            return presentingViewController.view.safeAreaInsets.top
-        } else {
-            return 20
-        }
+        return safeAreaInsets.top
     }
     
     private var topAnchor: NSLayoutYAxisAnchor {
@@ -130,7 +147,7 @@ final class HandyPresentationController: UIPresentationController {
     
     private func animatePanChange(translationY: CGFloat) {
         guard let presented = presentedView else { return }
-        presented.frame.origin.y = topDistance - self.safeAreaBottomInset + translationY * 0.7 // speed
+        presented.frame.origin.y = topDistance - safeAreaInsets.bottom + translationY * 0.7 // speed
         let yVal = (UIScreen.main.bounds.height - presented.frame.origin.y) / presented.frame.height
         backgroundDimView.backgroundColor = UIColor(
             white: 0, alpha: yVal - maxBackgroundOpacity
@@ -146,22 +163,17 @@ final class HandyPresentationController: UIPresentationController {
             dismiss()
         } else {
             isSwipableAnimating = true
-            UIView.animate(
-                withDuration: 0.5,
-                delay: 0,
-                usingSpringWithDamping: 0.8,
-                initialSpringVelocity: 0.8,
-                options: .curveEaseInOut, animations: { [ weak self ] in
-                    guard let self = self else { return }
-                    guard let presented = self.presentedView else { return }
-                    presented.frame.origin = CGPoint(
-                        x: 0, y: self.topDistance - self.safeAreaBottomInset
-                    )
-                    self.backgroundDimView.backgroundColor = UIColor(
-                        white: 0, alpha: self.maxBackgroundOpacity
-                    )
-                    self.setSwipableAnimatingWithDelay()
-            })
+            animateDamping { [ weak self ] in
+                guard let self = self else { return }
+                guard let presented = self.presentedView else { return }
+                presented.frame.origin = CGPoint(
+                    x: 0, y: self.topDistance - self.safeAreaInsets.bottom
+                )
+                self.backgroundDimView.backgroundColor = UIColor(
+                    white: 0, alpha: self.maxBackgroundOpacity
+                )
+                self.setSwipableAnimatingWithDelay()
+            }
         }
     }
     
@@ -212,9 +224,7 @@ final class HandyPresentationController: UIPresentationController {
         coordinator.animate(alongsideTransition: { [ weak self ] _ in
             self?.backgroundDimView.alpha = 1
             self?.updateTopDistance()
-            }, completion: { [ weak self ] _ in
-                self?.animatePanEnd(velocityCheck: false)
-        })
+            }, completion: nil)
     }
     
     override func dismissalTransitionWillBegin() {
@@ -261,20 +271,41 @@ extension HandyPresentationController: HandyScrollViewDelegate {
                                context: UnsafeMutableRawPointer?) {
         if keyPath == "contentSize" {
             if let scrollView = object as? UIScrollView {
-                setScrollViewHeight(scrollView)
+                handleScrollViewContentSizeChange(scrollView)
             }
         }
     }
     
+    /// Changes scroll view height according to its content size.
+    /// There is a workaround for issue where observed contentSize being called multiple times.
+    private func handleScrollViewContentSizeChange(_ scrollView: UIScrollView) {
+        guard temporaryScrollViewHeight == -1 else {
+            temporaryScrollViewHeight = scrollView.contentSize.height
+            return
+        }
+        temporaryScrollViewHeight = scrollView.contentSize.height
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [ weak self ] in
+            guard let self = self else { return }
+            self.setScrollViewHeight(scrollView)
+        }
+    }
+    
     private func setScrollViewHeight(_ scrollView: UIScrollView) {
-        let scrollViewContentHeight = scrollView.contentSize.height
+        let scrollViewContentHeight = temporaryScrollViewHeight
+        temporaryScrollViewHeight = -1
         scrollViewHeight = 0
         
-        if contentHeight + scrollViewContentHeight + minimumTopDistance > UIScreen.main.bounds.height {
+        if UIScreen.main.bounds.height - contentHeight - scrollViewContentHeight < minimumTopDistance {
             scrollViewHeight = UIScreen.main.bounds.height - contentHeight - minimumTopDistance
         } else {
             scrollViewHeight = scrollViewContentHeight
         }
+        
+        if scrollViewHeight == -1 {
+            scrollViewHeight = 0
+        }
+        
+        contentHeightConstraint?.constant = contentHeight + scrollViewHeight
         
         if scrollViewHeightConstraint == nil {
             scrollViewHeightConstraint = scrollView.heightAnchor.constraint(
@@ -284,12 +315,20 @@ extension HandyPresentationController: HandyScrollViewDelegate {
             updateTopDistance()
         } else {
             scrollViewHeightConstraint?.constant = scrollViewHeight
-            topConstraint?.constant = topDistance
-            UIView.animate(withDuration: 0.15) { [ weak self ] in
+            self.topConstraint?.constant = self.topDistance - self.safeAreaInsets.bottom - self.safeAreaInsets.top
+            animateDamping { [ weak self ] in
                 self?.containerView?.layoutIfNeeded()
             }
-            animatePanEnd(velocityCheck: false)
         }
+    }
+    
+    private func animateDamping(animations: @escaping (() -> Void)) {
+        UIView.animate(
+            withDuration: 0.5,
+            delay: 0,
+            usingSpringWithDamping: 0.8,
+            initialSpringVelocity: 0.8,
+            options: .curveEaseInOut, animations: animations)
     }
     
 }
