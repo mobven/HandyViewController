@@ -21,7 +21,7 @@ class ViewController: UIViewController {
         let controller = UIStoryboard(
             name: "Main", bundle: nil
         ).instantiateViewController(withIdentifier: "HandyViewController")
-        detailsTransitioningDelegate = HandyTransitioningDelegate(from: self, to: controller)
+        detailsTransitioningDelegate = HandyTransitioningDelegate(from: self, to: controller, contentMode: .fullScreen)
         controller.modalPresentationStyle = .custom
         controller.transitioningDelegate = detailsTransitioningDelegate
         present(controller, animated: true, completion: nil)

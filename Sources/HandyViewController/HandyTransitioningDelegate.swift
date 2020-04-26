@@ -11,9 +11,12 @@ import UIKit
 public final class HandyTransitioningDelegate: NSObject {
     
     internal weak var scrollViewDelegate: HandyScrollViewDelegate?
+    internal var contentMode: ContentMode = .contentSize
     
-    public init(from presented: UIViewController, to presenting: UIViewController) {
+    public init(from presented: UIViewController, to presenting: UIViewController,
+                contentMode: ContentMode = .contentSize) {
         super.init()
+        self.contentMode = contentMode
     }
     
 }
@@ -31,7 +34,9 @@ extension HandyTransitioningDelegate: UIViewControllerTransitioningDelegate {
         presenting: UIViewController?,
         source: UIViewController
     ) -> UIPresentationController? {
-        let controller = HandyPresentationController(presentedViewController: presented, presenting: presenting)
+        let controller = HandyPresentationController(presentedViewController: presented,
+                                                     presenting: presenting,
+                                                     contentMode: contentMode)
         scrollViewDelegate = controller
         return controller
     }

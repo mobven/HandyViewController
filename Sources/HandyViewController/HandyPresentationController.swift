@@ -10,6 +10,8 @@ import UIKit
 
 final class HandyPresentationController: UIPresentationController {
     
+    private var contentMode: ContentMode = .contentSize
+    
     private let maxBackgroundOpacity: CGFloat = 0.5
     private var contentHeight: CGFloat!
     private var scrollViewHeight: CGFloat = 0
@@ -30,22 +32,29 @@ final class HandyPresentationController: UIPresentationController {
     private weak var topConstraint: NSLayoutConstraint?
     private weak var scrollViewHeightConstraint: NSLayoutConstraint?
     
-    override init(presentedViewController: UIViewController,
-                  presenting presentingViewController: UIViewController?) {
+    required init(presentedViewController: UIViewController,
+                  presenting presentingViewController: UIViewController?, contentMode: ContentMode) {
         super.init(presentedViewController: presentedViewController,
                    presenting: presentingViewController)
+        self.contentMode = contentMode
         
         presentedViewController.view.addGestureRecognizer(
             UIPanGestureRecognizer(target: self, action: #selector(didPan(_:)))
         )
         
-        presentedViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        presentedViewController.view.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
         presentedViewController.view.layer.cornerRadius = 10
         
-        contentHeight = presentedViewController.view.systemLayoutSizeFitting(
-            UIView.layoutFittingCompressedSize
-        ).height
+        if contentMode == .fullScreen {
+            contentHeight = UIScreen.main.bounds.height - 44 // TODO: calculate
+        } else {
+            presentedViewController.view.translatesAutoresizingMaskIntoConstraints = false
+            presentedViewController.view.widthAnchor.constraint(
+                equalToConstant: UIScreen.main.bounds.width
+            ).isActive = true
+            contentHeight = presentedViewController.view.systemLayoutSizeFitting(
+                UIView.layoutFittingCompressedSize
+            ).height
+        }
     }
     
     private func updateTopDistance() {
@@ -95,6 +104,9 @@ final class HandyPresentationController: UIPresentationController {
     }
     
     private var topDistance: CGFloat {
+        guard contentMode == .contentSize else {
+            return minimumTopDistance
+        }
         let distance = UIScreen.main.bounds.height - contentHeight - scrollViewHeight + minimumTopDistance
         if distance < 0 {
             return minimumTopDistance
@@ -129,7 +141,8 @@ final class HandyPresentationController: UIPresentationController {
         guard let presented = presentedView else { return }
         if velocityCheck {
             dismiss()
-        } else if (UIScreen.main.bounds.height - presented.frame.origin.y + minimumTopDistance) < presented.frame.height / 2 {
+        } else if (UIScreen.main.bounds.height - presented.frame.origin.y + minimumTopDistance) <
+            presented.frame.height / 2 {
             dismiss()
         } else {
             isSwipableAnimating = true
