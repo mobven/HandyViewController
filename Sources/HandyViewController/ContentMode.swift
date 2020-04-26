@@ -8,5 +8,10 @@
 import Foundation
 
 public enum ContentMode {
-    case contentSize, fullScreen
+    /// View controller is displayed according to its content size.
+    /// View hierarchy should be from top to bottom with constraints.
+    /// Last component in the view hierarchy may have less priority to fix issues in IB.
+    case contentSize
+    /// View controller displayed full screen with a small padding in the top.
+    case fullScreen
 }

@@ -75,22 +75,22 @@ final class HandyPresentationController: UIPresentationController {
         )
         
         presentedViewController.view.layer.cornerRadius = 10
+        presentedViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        presentedViewController.view.widthAnchor.constraint(
+            equalToConstant: UIScreen.main.bounds.width
+        ).isActive = true
         
         if contentMode == .fullScreen {
-            contentHeight = UIScreen.main.bounds.height - safeAreaInsets.bottom
+            contentHeight = UIScreen.main.bounds.height - safeAreaInsets.top
         } else {
-            presentedViewController.view.translatesAutoresizingMaskIntoConstraints = false
-            presentedViewController.view.widthAnchor.constraint(
-                equalToConstant: UIScreen.main.bounds.width
-            ).isActive = true
             contentHeight = presentedViewController.view.systemLayoutSizeFitting(
                 UIView.layoutFittingCompressedSize
             ).height + safeAreaInsets.top
-            contentHeightConstraint = presentedViewController.view.heightAnchor.constraint(
-                equalToConstant: contentHeight
-            )
-            contentHeightConstraint?.isActive = true
         }
+        contentHeightConstraint = presentedViewController.view.heightAnchor.constraint(
+            equalToConstant: contentHeight
+        )
+        contentHeightConstraint?.isActive = true
     }
     
     private func updateTopDistance() {
@@ -124,9 +124,6 @@ final class HandyPresentationController: UIPresentationController {
     }
     
     private var topDistance: CGFloat {
-        guard contentMode == .contentSize else {
-            return minimumTopDistance
-        }
         let distance = UIScreen.main.bounds.height - contentHeight - scrollViewHeight + minimumTopDistance
         if distance < 0 {
             return minimumTopDistance
@@ -249,6 +246,7 @@ final class HandyPresentationController: UIPresentationController {
 extension HandyPresentationController: HandyScrollViewDelegate {
     
     func handyScrollViewDidSetContentSize(_ scrollView: UIScrollView) {
+        guard contentMode == .contentSize else { return }
         scrollView.layoutIfNeeded()
         scrollView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         setScrollViewHeight(scrollView)
