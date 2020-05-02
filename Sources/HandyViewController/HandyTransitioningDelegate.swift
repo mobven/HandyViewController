@@ -15,6 +15,10 @@ public final class HandyTransitioningDelegate: NSObject {
     internal var contentMode: ContentMode = .contentSize
     internal var scrollView: UIScrollView?
     
+    /// Initializes transitioing delegate.
+    /// - parameter presented: View controller presenting HandyViewController.
+    /// - parameter presenting: View controller being presented.
+    /// - parameter contentMode: Content mode of HandyViewController.
     public init(from presented: UIViewController, to presenting: UIViewController,
                 contentMode: ContentMode = .contentSize) {
         super.init()
