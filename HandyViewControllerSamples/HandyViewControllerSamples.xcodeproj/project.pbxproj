@@ -16,6 +16,8 @@
 		6D7FEE96244C51A300832DF6 /* HandyViewControllerSamplesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7FEE95244C51A300832DF6 /* HandyViewControllerSamplesUITests.swift */; };
 		6D7FEEB8244C580900832DF6 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7FEEB7244C580900832DF6 /* DetailsViewController.swift */; };
 		6D836074245E09DB004AB8FA /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D836073245E09DB004AB8FA /* NavigationViewController.swift */; };
+		6D83607A245E34EC004AB8FA /* HandyViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D836079245E34EC004AB8FA /* HandyViewController.framework */; };
+		6D83607B245E34EC004AB8FA /* HandyViewController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6D836079245E34EC004AB8FA /* HandyViewController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +37,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		6D83607C245E34EC004AB8FA /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				6D83607B245E34EC004AB8FA /* HandyViewController.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		6D7FEE70244C519B00832DF6 /* HandyViewControllerSamples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HandyViewControllerSamples.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D7FEE73244C519B00832DF6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -51,6 +67,7 @@
 		6D7FEE97244C51A300832DF6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6D7FEEB7244C580900832DF6 /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
 		6D836073245E09DB004AB8FA /* NavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewController.swift; sourceTree = "<group>"; };
+		6D836079245E34EC004AB8FA /* HandyViewController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HandyViewController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D83607A245E34EC004AB8FA /* HandyViewController.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +103,7 @@
 				6D7FEE89244C51A200832DF6 /* HandyViewControllerSamplesTests */,
 				6D7FEE94244C51A300832DF6 /* HandyViewControllerSamplesUITests */,
 				6D7FEE71244C519B00832DF6 /* Products */,
+				6D836078245E34EC004AB8FA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -131,6 +150,14 @@
 			path = HandyViewControllerSamplesUITests;
 			sourceTree = "<group>";
 		};
+		6D836078245E34EC004AB8FA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6D836079245E34EC004AB8FA /* HandyViewController.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -141,6 +168,7 @@
 				6D7FEE6C244C519B00832DF6 /* Sources */,
 				6D7FEE6D244C519B00832DF6 /* Frameworks */,
 				6D7FEE6E244C519B00832DF6 /* Resources */,
+				6D83607C245E34EC004AB8FA /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

@@ -1,4 +1,10 @@
+[![Pod License](https://img.shields.io/github/license/mobven/HandyViewController)](https://www.apache.org/licenses/LICENSE-2.0.html)
+[![SwiftPM compatible](https://img.shields.io/badge/SwiftPM-compatible-brightgreen.svg)](https://swift.org/package-manager/)
+
 View controller transitioning allowing presented view controller to be dismissed by swiping down.
+
+## Examples
+![Custom Content](Docs/example_usage_1.gif)![UITableView](Docs/example_usage_2.gif)![Full Screen](Docs/example_usage_4.gif)
 
 ## Requirements
 * iOS 10.0+
@@ -60,3 +66,4 @@ extension DetailsViewController: UIScrollViewDelegate {
 - Tests in iPads.
 - Swipe-to-dismiss indicator in top of the screen.
 - iOS 13 modal presentation style for full-screen presented view controllers where presenting view controller frame decreased in background.
+- Unit Tests.

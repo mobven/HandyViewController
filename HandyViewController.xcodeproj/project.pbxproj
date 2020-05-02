@@ -52,6 +52,9 @@
 /* Begin PBXFileReference section */
 		6D4E40142454DCEA00B8CC67 /* ContentMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentMode.swift; sourceTree = "<group>"; };
 		6D836075245E2DF1004AB8FA /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		6D83607D245E3767004AB8FA /* example_usage_1.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = example_usage_1.gif; sourceTree = "<group>"; };
+		6D83607E245E3767004AB8FA /* example_usage_2.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = example_usage_2.gif; sourceTree = "<group>"; };
+		6D83607F245E3767004AB8FA /* example_usage_4.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = example_usage_4.gif; sourceTree = "<group>"; };
 		6D854B8E244E84B600DF49FE /* HandyTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandyTransitioningDelegate.swift; sourceTree = "<group>"; };
 		6D854B8F244E84B600DF49FE /* HandyPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandyPresentationController.swift; sourceTree = "<group>"; };
 		6D9E8C34244CFCB000DF7564 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -83,6 +86,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6D836076245E328D004AB8FA /* Docs */ = {
+			isa = PBXGroup;
+			children = (
+				6D83607D245E3767004AB8FA /* example_usage_1.gif */,
+				6D83607E245E3767004AB8FA /* example_usage_2.gif */,
+				6D83607F245E3767004AB8FA /* example_usage_4.gif */,
+			);
+			path = Docs;
+			sourceTree = "<group>";
+		};
 		OBJ_10 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -119,6 +132,7 @@
 				OBJ_7 /* Sources */,
 				OBJ_10 /* Tests */,
 				OBJ_14 /* Products */,
+				6D836076245E328D004AB8FA /* Docs */,
 			);
 			sourceTree = "<group>";
 		};
