@@ -18,7 +18,7 @@ final class DetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         registerHandyScrollView(tableView)
-        for index in 1...21 {
+        for index in 1...5 {
             data.append("Cell no: \(index)")
         }
     }
