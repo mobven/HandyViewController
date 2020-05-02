@@ -10,7 +10,6 @@ import UIKit
 
 class NavigationViewController: UIViewController {
     
-    
     @IBAction func pushViewController() {
         let viewController = storyboard?.instantiateViewController(withIdentifier: "VeryShortHandyViewController")
         navigationController?.pushViewController(viewController!, animated: true)

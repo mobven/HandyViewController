@@ -51,6 +51,7 @@
 
 /* Begin PBXFileReference section */
 		6D4E40142454DCEA00B8CC67 /* ContentMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentMode.swift; sourceTree = "<group>"; };
+		6D836075245E2DF1004AB8FA /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		6D854B8E244E84B600DF49FE /* HandyTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandyTransitioningDelegate.swift; sourceTree = "<group>"; };
 		6D854B8F244E84B600DF49FE /* HandyPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandyPresentationController.swift; sourceTree = "<group>"; };
 		6D9E8C34244CFCB000DF7564 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -113,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				6D9E8C3A244CFD5900DF7564 /* README.md */,
+				6D836075245E2DF1004AB8FA /* LICENSE */,
 				OBJ_6 /* Package.swift */,
 				OBJ_7 /* Sources */,
 				OBJ_10 /* Tests */,

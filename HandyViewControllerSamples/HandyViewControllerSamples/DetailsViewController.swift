@@ -24,7 +24,7 @@ final class DetailsViewController: UIViewController {
     }
     
     @IBAction func addMoreItems() {
-        for index in 1...3 {
+        for index in data.count...data.count+3 {
             data.append("Cell no: \(index)")
         }
         tableView.reloadData()
@@ -53,12 +53,12 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
 extension DetailsViewController {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        handyScrollViewDelegate?.handyScrollViewDidScroll(scrollView)
+        handyScrollViewDidScroll(scrollView)
     }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint,
                                    targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        handyScrollViewDelegate?.handyScrollViewWillEndDragging(scrollView, withVelocity: velocity)
+        handyScrollViewWillEndDragging(scrollView, withVelocity: velocity)
     }
     
 }

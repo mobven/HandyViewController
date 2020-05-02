@@ -9,6 +9,7 @@
 import UIKit
 
 /// `UIScrollViewDelegate` actions listened by `HandScrollViewController`.
+@available(*, deprecated)
 public protocol HandyScrollViewDelegate: class {
     /// Equivalent to `UIScrollViewDelegate.scrollViewDidScroll(:)` function.
     /// - parameter scrollView: Any `UIScrollView` child class, eg: `UITableView`

@@ -10,7 +10,6 @@ import UIKit
 
 public final class HandyTransitioningDelegate: NSObject {
     
-    internal weak var scrollViewDelegate: HandyScrollViewDelegate?
     internal weak var scrollViewContentSizeDelegate: HandyScrollViewContentSizeDelegate?
     internal var contentMode: ContentMode = .contentSize
     internal var scrollView: UIScrollView?
@@ -58,7 +57,6 @@ extension HandyTransitioningDelegate: UIViewControllerTransitioningDelegate {
                                                      safeAreaInsets: safeAreaInsets,
                                                      contentMode: contentMode)
         scrollViewContentSizeDelegate = controller
-        scrollViewDelegate = controller
         if let scrollView = scrollView {
             scrollViewContentSizeDelegate?.registerHandyScrollView(scrollView)
         }

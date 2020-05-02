@@ -254,7 +254,7 @@ extension HandyPresentationController: HandyScrollViewContentSizeDelegate {
     
 }
 
-extension HandyPresentationController: HandyScrollViewDelegate {
+extension HandyPresentationController {
     
     func handyScrollViewDidScroll(_ scrollView: UIScrollView) {
         let offset = scrollView.contentOffset
