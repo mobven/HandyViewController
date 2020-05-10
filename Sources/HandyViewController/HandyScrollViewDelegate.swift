@@ -25,4 +25,8 @@ protocol HandyScrollViewContentSizeDelegate: class {
     /// Registers for content size changes within specified scroll view.
     /// - parameter scrollView: `UIScrollView` to be registered.
     func registerHandyScrollView(_ scrollView: UIScrollView)
+    /// Manipulates stack view by adding empty arranged subview in the end,
+    /// for those with types `UIStackView.Alignment.Distribution.fill` and `UIStackView.Alignment.Alignment.fill`
+    /// - parameter stackView: `UIStackView` to be manipulated for height.
+    func registerHandyStackView(_ stackView: UIStackView)
 }

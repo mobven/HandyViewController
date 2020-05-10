@@ -13,6 +13,7 @@ public final class HandyTransitioningDelegate: NSObject {
     internal weak var scrollViewContentSizeDelegate: HandyScrollViewContentSizeDelegate?
     internal var contentMode: ContentMode = .contentSize
     internal var scrollView: UIScrollView?
+    internal var stackView: UIStackView?
     
     /// Initializes transitioing delegate.
     /// - parameter presented: View controller presenting HandyViewController.
@@ -28,6 +29,13 @@ public final class HandyTransitioningDelegate: NSObject {
         self.scrollView = scrollView
         if let scrollViewContentSizeDelegate = scrollViewContentSizeDelegate {
             scrollViewContentSizeDelegate.registerHandyScrollView(scrollView)
+        }
+    }
+    
+    internal func registerHandyStackView(_ stackView: UIStackView) {
+        self.stackView = stackView
+        if let scrollViewContentSizeDelegate = scrollViewContentSizeDelegate {
+            scrollViewContentSizeDelegate.registerHandyStackView(stackView)
         }
     }
     
@@ -59,6 +67,8 @@ extension HandyTransitioningDelegate: UIViewControllerTransitioningDelegate {
         scrollViewContentSizeDelegate = controller
         if let scrollView = scrollView {
             scrollViewContentSizeDelegate?.registerHandyScrollView(scrollView)
+        } else if let stackView = stackView {
+            scrollViewContentSizeDelegate?.registerHandyStackView(stackView)
         }
         return controller
     }

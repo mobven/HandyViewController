@@ -47,4 +47,12 @@ class ViewController: UIViewController {
         present(controller, animated: true, completion: nil)
     }
     
+    @IBAction private func presentStackViewController() {
+        let controller = storyboard!.instantiateViewController(withIdentifier: "StackViewController")
+        let transitioningDelegate = HandyTransitioningDelegate(from: self, to: controller)
+        controller.modalPresentationStyle = .custom
+        controller.transitioningDelegate = transitioningDelegate
+        present(controller, animated: true, completion: nil)
+    }
+    
 }

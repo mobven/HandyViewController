@@ -67,3 +67,6 @@ extension DetailsViewController: UIScrollViewDelegate {
 - Swipe-to-dismiss indicator in top of the screen.
 - iOS 13 modal presentation style for full-screen presented view controllers where presenting view controller frame decreased in background.
 - Unit Tests.
+
+---
+Developed with 🖤 at [Mobven](https://mobven.com/)

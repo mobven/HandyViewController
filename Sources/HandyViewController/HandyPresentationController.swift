@@ -252,6 +252,17 @@ extension HandyPresentationController: HandyScrollViewContentSizeDelegate {
         setScrollViewHeight(scrollView)
     }
     
+    /// Manipulates stack view by adding empty arranged subview in the end,
+    /// for those with types `UIStackView.Alignment.Distribution.fill` and `UIStackView.Alignment.Alignment.fill`
+    /// - parameter stackView: `UIStackView` to be manipulated for height.
+    func registerHandyStackView(_ stackView: UIStackView) {
+        if stackView.alignment == .fill && stackView.distribution == .fill {
+            let emptyFooterView = UIView()
+            emptyFooterView.backgroundColor = .clear
+            stackView.addArrangedSubview(emptyFooterView)
+        }
+    }
+    
 }
 
 extension HandyPresentationController {
