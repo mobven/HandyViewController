@@ -67,7 +67,8 @@ extension HandyTransitioningDelegate: UIViewControllerTransitioningDelegate {
         scrollViewContentSizeDelegate = controller
         if let scrollView = scrollView {
             scrollViewContentSizeDelegate?.registerHandyScrollView(scrollView)
-        } else if let stackView = stackView {
+        }
+        if let stackView = stackView {
             scrollViewContentSizeDelegate?.registerHandyStackView(stackView)
         }
         return controller
