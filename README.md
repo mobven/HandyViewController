@@ -4,7 +4,7 @@
 View controller transitioning allowing presented view controller to be dismissed by swiping down.
 
 ## Examples
-![Custom Content](Docs/example_usage_1.gif)![UITableView](Docs/example_usage_2.gif)![Full Screen](Docs/example_usage_4.gif)
+![Custom Content](Docs/example_usage_1.gif)![UITableView](Docs/example_usage_2.gif)![Full Screen](Docs/example_usage_3.gif)
 
 ## Requirements
 * iOS 10.0+
@@ -12,7 +12,7 @@ View controller transitioning allowing presented view controller to be dismissed
 * Swift 5.2+
 
 ## Installation
-HandyViewController is distributed with [Swift Package Manager](https://swift.org/package-manager/) which is the only official distribution tool by Apple. You can add HandyViewController to your project from Xcode's `File > Swift Packages > Add Package Dependency` menu from its github URL:
+HandyViewController is distributed with [Swift Package Manager](https://swift.org/package-manager/) which is the only official distribution tool by Apple. You can add HandyViewController to your project from Xcode's `File > Swift Packages > Add Package Dependency` menu with its github URL:
 ```swift
 https://github.com/mobven/HandyViewController.git
 ```
@@ -58,6 +58,15 @@ extension DetailsViewController: UIScrollViewDelegate {
                                    targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         handyScrollViewWillEndDragging(scrollView, withVelocity: velocity)
     }
+}
+```
+
+### StackView usage
+During usage we've faced content size calculation issues with presented view controllers containing `UIStackView` with `fill` distribution and alignment attributes. As a workaround to this issue `HandyViewController` adds an empty footer view to your stack view, which is invisible. You can achieve this by calling:
+```swift
+override func viewDidLoad() {
+    super.viewDidLoad()
+    registerHandyStackView(stackView)
 }
 ```
 
