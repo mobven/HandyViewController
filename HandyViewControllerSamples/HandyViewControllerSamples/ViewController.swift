@@ -15,14 +15,6 @@ class ViewController: UIViewController {
         super.viewDidLoad()
     }
     
-    @IBAction private func presentHandyViewController() {
-        let controller = storyboard!.instantiateViewController(withIdentifier: "HandyViewController")
-        let transitioningDelegate = HandyTransitioningDelegate(from: self, to: controller)
-        controller.modalPresentationStyle = .custom
-        controller.transitioningDelegate = transitioningDelegate
-        present(controller, animated: true, completion: nil)
-    }
-    
     @IBAction private func presentHandyTableViewController() {
         let controller = storyboard!.instantiateViewController(withIdentifier: "HandyTableViewController")
         let transitioningDelegate = HandyTransitioningDelegate(from: self, to: controller)
