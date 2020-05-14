@@ -1,4 +1,6 @@
-![HandyViewController](Docs/handy.png)
+<p align="center">
+  <img src="Docs/handy.png">
+</p>
 
 [![Pod License](https://img.shields.io/github/license/mobven/HandyViewController)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![SwiftPM compatible](https://img.shields.io/badge/SwiftPM-compatible-brightgreen.svg)](https://swift.org/package-manager/)
@@ -6,7 +8,11 @@
 View controller transitioning allowing self-sizing presented view controller to be dismissed by swiping down.
 
 ## Examples
-![Custom Content](Docs/example_usage_1.gif)![UITableView](Docs/example_usage_2.gif)![Full Screen](Docs/example_usage_3.gif)
+<p align="center">
+  <img alt="Custom Content" src="Docs/example_usage_1.gif">
+  <img alt="UITableVoew" src="Docs/example_usage_2.gif">
+  <img alt="Full Screen" src="Docs/example_usage_3.gif">
+</p>
 
 ## Requirements
 * iOS 10.0+
