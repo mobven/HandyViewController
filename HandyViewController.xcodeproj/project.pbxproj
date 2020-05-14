@@ -60,6 +60,7 @@
 		6D9E8C34244CFCB000DF7564 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		6D9E8C35244CFCB100DF7564 /* HandyScrollViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandyScrollViewDelegate.swift; sourceTree = "<group>"; };
 		6D9E8C3A244CFD5900DF7564 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		6DFF4BFF246D92D700F7E95A /* handy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = handy.png; sourceTree = "<group>"; };
 		"HandyViewController::HandyViewController::Product" /* HandyViewController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HandyViewController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"HandyViewController::HandyViewControllerTests::Product" /* HandyViewControllerTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = HandyViewControllerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_12 /* HandyViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandyViewControllerTests.swift; sourceTree = "<group>"; };
@@ -89,6 +90,7 @@
 		6D836076245E328D004AB8FA /* Docs */ = {
 			isa = PBXGroup;
 			children = (
+				6DFF4BFF246D92D700F7E95A /* handy.png */,
 				6D83607D245E3767004AB8FA /* example_usage_1.gif */,
 				6D83607E245E3767004AB8FA /* example_usage_2.gif */,
 				6D83607F245E3767004AB8FA /* example_usage_4.gif */,
