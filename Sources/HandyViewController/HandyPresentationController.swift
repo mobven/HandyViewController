@@ -34,7 +34,9 @@ public final class HandyPresentationController: UIPresentationController {
     private weak var scrollViewHeightConstraint: NSLayoutConstraint?
     
     private var isSwipableAnimating: Bool = false
-    
+
+    private var contentSizeObserver: NSObjectProtocol?
+
     /// Background dim view with alpha value `maxBackgroundOpacity`.
     private lazy var backgroundDimView: UIView! = {
         guard let container = containerView else { return nil }
@@ -95,7 +97,7 @@ public final class HandyPresentationController: UIPresentationController {
     
     private func updateTopDistance() {
         guard let container = containerView else { return }
-        
+
         if topConstraint != nil {
             if topConstraint?.constant != topDistance {
                 topConstraint?.constant = topDistance - safeAreaInsets.bottom - safeAreaInsets.top
@@ -248,7 +250,10 @@ extension HandyPresentationController: HandyScrollViewContentSizeDelegate {
     func registerHandyScrollView(_ scrollView: UIScrollView) {
         guard contentMode == .contentSize else { return }
         scrollView.layoutIfNeeded()
-        scrollView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
+
+        contentSizeObserver = scrollView.observe(\.contentSize, options: .new) { [weak self] scrollView, _ in
+            self?.handleScrollViewContentSizeChange(scrollView)
+        }
         setScrollViewHeight(scrollView)
     }
     
@@ -282,16 +287,6 @@ public extension HandyPresentationController {
         }
     }
 
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?,
-                               change: [NSKeyValueChangeKey: Any]?,
-                               context: UnsafeMutableRawPointer?) {
-        if keyPath == "contentSize" {
-            if let scrollView = object as? UIScrollView {
-                handleScrollViewContentSizeChange(scrollView)
-            }
-        }
-    }
-    
     /// Changes scroll view height according to its content size.
     /// There is a workaround for issue where observed contentSize being called multiple times.
     private func handleScrollViewContentSizeChange(_ scrollView: UIScrollView) {
