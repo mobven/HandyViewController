@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class HandyPresentationController: UIPresentationController {
+public final class HandyPresentationController: UIPresentationController {
     
     /// Safe area insets of source view controller.
     private var safeAreaInsets: UIEdgeInsets
@@ -207,13 +207,13 @@ final class HandyPresentationController: UIPresentationController {
     }
     
     // MARK: - UIPresentationController
-    override var frameOfPresentedViewInContainerView: CGRect {
+    public override var frameOfPresentedViewInContainerView: CGRect {
         guard let container = containerView else { return .zero }
         
         return CGRect(x: 0, y: 0, width: container.bounds.width, height: UIScreen.main.bounds.height)
     }
     
-    override func presentationTransitionWillBegin() {
+    public override func presentationTransitionWillBegin() {
         guard let container = containerView,
             let coordinator = presentingViewController.transitionCoordinator else { return }
         
@@ -227,7 +227,7 @@ final class HandyPresentationController: UIPresentationController {
             }, completion: nil)
     }
     
-    override func dismissalTransitionWillBegin() {
+    public override func dismissalTransitionWillBegin() {
         guard let coordinator = presentingViewController.transitionCoordinator else { return }
         
         coordinator.animate(alongsideTransition: { [ weak self ] _ -> Void in
@@ -235,7 +235,7 @@ final class HandyPresentationController: UIPresentationController {
             }, completion: nil)
     }
     
-    override func dismissalTransitionDidEnd(_ completed: Bool) {
+    public override func dismissalTransitionDidEnd(_ completed: Bool) {
         if completed {
             backgroundDimView.removeFromSuperview()
         }
@@ -265,7 +265,7 @@ extension HandyPresentationController: HandyScrollViewContentSizeDelegate {
     
 }
 
-extension HandyPresentationController {
+public extension HandyPresentationController {
     
     func handyScrollViewDidScroll(_ scrollView: UIScrollView) {
         let offset = scrollView.contentOffset
@@ -281,7 +281,7 @@ extension HandyPresentationController {
             animatePanEnd(velocityCheck: velocity.y < -1.6)
         }
     }
-    
+
     override func observeValue(forKeyPath keyPath: String?, of object: Any?,
                                change: [NSKeyValueChangeKey: Any]?,
                                context: UnsafeMutableRawPointer?) {

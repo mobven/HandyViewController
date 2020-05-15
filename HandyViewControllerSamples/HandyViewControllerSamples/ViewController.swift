@@ -20,7 +20,7 @@ class ViewController: UIViewController {
         let transitioningDelegate = HandyTransitioningDelegate(from: self, to: controller)
         controller.modalPresentationStyle = .custom
         controller.transitioningDelegate = transitioningDelegate
-        present(controller, animated: true, completion: nil)
+        present(controller, animated: true)
     }
     
     @IBAction private func presentVeryShortHandyViewController() {
@@ -28,7 +28,7 @@ class ViewController: UIViewController {
         let transitioningDelegate = HandyTransitioningDelegate(from: self, to: controller)
         controller.modalPresentationStyle = .custom
         controller.transitioningDelegate = transitioningDelegate
-        present(controller, animated: true, completion: nil)
+        present(controller, animated: true)
     }
     
     @IBAction private func presentNavigationController() {
@@ -36,7 +36,7 @@ class ViewController: UIViewController {
         let transitioningDelegate = HandyTransitioningDelegate(from: self, to: controller, contentMode: .fullScreen)
         controller.modalPresentationStyle = .custom
         controller.transitioningDelegate = transitioningDelegate
-        present(controller, animated: true, completion: nil)
+        present(controller, animated: true)
     }
     
     @IBAction private func presentStackViewController() {
@@ -44,7 +44,7 @@ class ViewController: UIViewController {
         let transitioningDelegate = HandyTransitioningDelegate(from: self, to: controller)
         controller.modalPresentationStyle = .custom
         controller.transitioningDelegate = transitioningDelegate
-        present(controller, animated: true, completion: nil)
+        present(controller, animated: true)
     }
     
 }
