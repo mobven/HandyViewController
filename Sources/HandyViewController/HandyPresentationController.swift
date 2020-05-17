@@ -8,7 +8,7 @@
 
 import UIKit
 
-public final class HandyPresentationController: UIPresentationController {
+final class HandyPresentationController: UIPresentationController {
     
     /// Safe area insets of source view controller.
     private var safeAreaInsets: UIEdgeInsets
@@ -34,9 +34,9 @@ public final class HandyPresentationController: UIPresentationController {
     private weak var scrollViewHeightConstraint: NSLayoutConstraint?
     
     private var isSwipableAnimating: Bool = false
-
-    private var contentSizeObserver: NSObjectProtocol?
-
+    
+    private var contentSizeObserver: NSKeyValueObservation?
+    
     /// Background dim view with alpha value `maxBackgroundOpacity`.
     private lazy var backgroundDimView: UIView! = {
         guard let container = containerView else { return nil }
@@ -95,9 +95,14 @@ public final class HandyPresentationController: UIPresentationController {
         contentHeightConstraint?.isActive = true
     }
     
+    deinit {
+        contentSizeObserver?.invalidate()
+        contentSizeObserver = nil
+    }
+    
     private func updateTopDistance() {
         guard let container = containerView else { return }
-
+        
         if topConstraint != nil {
             if topConstraint?.constant != topDistance {
                 topConstraint?.constant = topDistance - safeAreaInsets.bottom - safeAreaInsets.top
@@ -209,13 +214,13 @@ public final class HandyPresentationController: UIPresentationController {
     }
     
     // MARK: - UIPresentationController
-    public override var frameOfPresentedViewInContainerView: CGRect {
+    override var frameOfPresentedViewInContainerView: CGRect {
         guard let container = containerView else { return .zero }
         
         return CGRect(x: 0, y: 0, width: container.bounds.width, height: UIScreen.main.bounds.height)
     }
     
-    public override func presentationTransitionWillBegin() {
+    override func presentationTransitionWillBegin() {
         guard let container = containerView,
             let coordinator = presentingViewController.transitionCoordinator else { return }
         
@@ -229,7 +234,7 @@ public final class HandyPresentationController: UIPresentationController {
             }, completion: nil)
     }
     
-    public override func dismissalTransitionWillBegin() {
+    override func dismissalTransitionWillBegin() {
         guard let coordinator = presentingViewController.transitionCoordinator else { return }
         
         coordinator.animate(alongsideTransition: { [ weak self ] _ -> Void in
@@ -237,7 +242,7 @@ public final class HandyPresentationController: UIPresentationController {
             }, completion: nil)
     }
     
-    public override func dismissalTransitionDidEnd(_ completed: Bool) {
+    override func dismissalTransitionDidEnd(_ completed: Bool) {
         if completed {
             backgroundDimView.removeFromSuperview()
         }
@@ -250,8 +255,8 @@ extension HandyPresentationController: HandyScrollViewContentSizeDelegate {
     func registerHandyScrollView(_ scrollView: UIScrollView) {
         guard contentMode == .contentSize else { return }
         scrollView.layoutIfNeeded()
-
-        contentSizeObserver = scrollView.observe(\.contentSize, options: .new) { [weak self] scrollView, _ in
+        
+        contentSizeObserver = scrollView.observe(\.contentSize, options: .new) { [ weak self ] scrollView, _ in
             self?.handleScrollViewContentSizeChange(scrollView)
         }
         setScrollViewHeight(scrollView)
@@ -270,7 +275,7 @@ extension HandyPresentationController: HandyScrollViewContentSizeDelegate {
     
 }
 
-public extension HandyPresentationController {
+extension HandyPresentationController {
     
     func handyScrollViewDidScroll(_ scrollView: UIScrollView) {
         let offset = scrollView.contentOffset
@@ -286,7 +291,7 @@ public extension HandyPresentationController {
             animatePanEnd(velocityCheck: velocity.y < -1.6)
         }
     }
-
+    
     /// Changes scroll view height according to its content size.
     /// There is a workaround for issue where observed contentSize being called multiple times.
     private func handleScrollViewContentSizeChange(_ scrollView: UIScrollView) {
