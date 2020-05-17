@@ -35,6 +35,8 @@ final class HandyPresentationController: UIPresentationController {
     
     private var isSwipableAnimating: Bool = false
     
+    private var contentSizeObserver: NSKeyValueObservation?
+    
     /// Background dim view with alpha value `maxBackgroundOpacity`.
     private lazy var backgroundDimView: UIView! = {
         guard let container = containerView else { return nil }
@@ -91,6 +93,11 @@ final class HandyPresentationController: UIPresentationController {
             equalToConstant: contentHeight
         )
         contentHeightConstraint?.isActive = true
+    }
+    
+    deinit {
+        contentSizeObserver?.invalidate()
+        contentSizeObserver = nil
     }
     
     private func updateTopDistance() {
@@ -248,7 +255,10 @@ extension HandyPresentationController: HandyScrollViewContentSizeDelegate {
     func registerHandyScrollView(_ scrollView: UIScrollView) {
         guard contentMode == .contentSize else { return }
         scrollView.layoutIfNeeded()
-        scrollView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
+        
+        contentSizeObserver = scrollView.observe(\.contentSize, options: .new) { [ weak self ] scrollView, _ in
+            self?.handleScrollViewContentSizeChange(scrollView)
+        }
         setScrollViewHeight(scrollView)
     }
     
@@ -279,16 +289,6 @@ extension HandyPresentationController {
             dismiss()
         } else {
             animatePanEnd(velocityCheck: velocity.y < -1.6)
-        }
-    }
-    
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?,
-                               change: [NSKeyValueChangeKey: Any]?,
-                               context: UnsafeMutableRawPointer?) {
-        if keyPath == "contentSize" {
-            if let scrollView = object as? UIScrollView {
-                handleScrollViewContentSizeChange(scrollView)
-            }
         }
     }
     

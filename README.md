@@ -21,7 +21,7 @@ View controller transitioning allowing self-sizing presented view controller to 
 
 ## Installation
 HandyViewController is distributed with [Swift Package Manager](https://swift.org/package-manager/) which is the only official distribution tool by Apple. You can add HandyViewController to your project from Xcode's `File > Swift Packages > Add Package Dependency` menu with its github URL:
-```swift
+```
 https://github.com/mobven/HandyViewController.git
 ```
 
@@ -34,7 +34,7 @@ let controller = storyboard!.instantiateViewController(withIdentifier: "ViewCont
 let transitioningDelegate = HandyTransitioningDelegate(from: self, to: controller)
 controller.modalPresentationStyle = .custom
 controller.transitioningDelegate = transitioningDelegate
-present(controller, animated: true, completion: nil)
+present(controller, animated: true)
 ```
 
 ### Full Screen
@@ -44,7 +44,7 @@ let controller = storyboard!.instantiateViewController(withIdentifier: "ViewCont
 let transitioningDelegate = HandyTransitioningDelegate(from: self, to: controller, contentMode: .fullScreen)
 controller.modalPresentationStyle = .custom
 controller.transitioningDelegate = transitioningDelegate
-present(controller, animated: true, completion: nil)
+present(controller, animated: true)
 ```
 
 ### ScrollView events
@@ -59,9 +59,11 @@ override func viewDidLoad() {
 HandyViewController provides swipe-to-dismiss feature with scroll events. To achieve this behavior, in your presented view controller: 
 ```swift
 extension DetailsViewController: UIScrollViewDelegate {
+
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         handyScrollViewDidScroll(scrollView)
     } 
+
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint,
                                    targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         handyScrollViewWillEndDragging(scrollView, withVelocity: velocity)
@@ -79,11 +81,11 @@ override func viewDidLoad() {
 ```
 
 ## What's next
-- Allow view controller to interrupt swipe-to-dismiss. 
-- Tests in iPads.
-- Swipe-to-dismiss indicator in top of the screen.
-- iOS 13 modal presentation style for full-screen presented view controllers where presenting view controller frame decreased in background.
-- Unit Tests.
+- [ ] Allow view controller to interrupt swipe-to-dismiss. 
+- [ ] Tests in iPads.
+- [ ] Swipe-to-dismiss indicator in top of the screen.
+- [ ] iOS 13 modal presentation style for full-screen presented view controllers where presenting view controller frame decreased in background.
+- [ ] Unit Tests.
 
 ---
 Developed with 🖤 at [Mobven](https://mobven.com/)
