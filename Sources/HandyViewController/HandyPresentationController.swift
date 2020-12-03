@@ -77,17 +77,18 @@ final class HandyPresentationController: UIPresentationController {
         )
         
         presentedViewController.view.layer.cornerRadius = 10
+        presentedViewController.view.layer.masksToBounds = true
         presentedViewController.view.translatesAutoresizingMaskIntoConstraints = false
         presentedViewController.view.widthAnchor.constraint(
             equalToConstant: UIScreen.main.bounds.width
         ).isActive = true
         
         if contentMode == .fullScreen {
-            contentHeight = UIScreen.main.bounds.height - safeAreaInsets.top
+            contentHeight = UIScreen.main.bounds.height - minimumTopDistance
         } else {
             contentHeight = presentedViewController.view.systemLayoutSizeFitting(
                 UIView.layoutFittingCompressedSize
-            ).height + safeAreaInsets.top
+            ).height + minimumTopDistance
         }
         contentHeightConstraint = presentedViewController.view.heightAnchor.constraint(
             equalToConstant: contentHeight
@@ -119,6 +120,9 @@ final class HandyPresentationController: UIPresentationController {
     }
     
     private var minimumTopDistance: CGFloat {
+        if safeAreaInsets.top == 0 {
+            return 20
+        }
         return safeAreaInsets.top
     }
     
@@ -166,7 +170,7 @@ final class HandyPresentationController: UIPresentationController {
         if velocityCheck {
             dismiss()
         } else if (UIScreen.main.bounds.height - presented.frame.origin.y + minimumTopDistance) <
-            presented.frame.height / 2 {
+                    presented.frame.height / 2 {
             dismiss()
         } else {
             isSwipableAnimating = true
@@ -194,12 +198,12 @@ final class HandyPresentationController: UIPresentationController {
                 x: presented.frame.origin.x,
                 y: UIScreen.main.bounds.height
             )
-            }, completion: { [ weak self ] (isCompleted) in
-                if isCompleted {
-                    self?.presentedViewController.dismiss(animated: false, completion: nil)
-                } else {
-                    self?.setSwipableAnimatingWithDelay()
-                }
+        }, completion: { [ weak self ] (isCompleted) in
+            if isCompleted {
+                self?.presentedViewController.dismiss(animated: false, completion: nil)
+            } else {
+                self?.setSwipableAnimatingWithDelay()
+            }
         })
     }
     
@@ -222,16 +226,21 @@ final class HandyPresentationController: UIPresentationController {
     
     override func presentationTransitionWillBegin() {
         guard let container = containerView,
-            let coordinator = presentingViewController.transitionCoordinator else { return }
+              let coordinator = presentingViewController.transitionCoordinator else { return }
         
         backgroundDimView.alpha = 0
         container.addSubview(backgroundDimView)
         backgroundDimView.addSubview(presentedViewController.view)
         
+        NSLayoutConstraint.activate([
+            presentedViewController.view.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            presentedViewController.view.trailingAnchor.constraint(equalTo: container.trailingAnchor)
+        ])
+        
         coordinator.animate(alongsideTransition: { [ weak self ] _ in
             self?.backgroundDimView.alpha = 1
             self?.updateTopDistance()
-            }, completion: nil)
+        }, completion: nil)
     }
     
     override func dismissalTransitionWillBegin() {
@@ -239,7 +248,7 @@ final class HandyPresentationController: UIPresentationController {
         
         coordinator.animate(alongsideTransition: { [ weak self ] _ -> Void in
             self?.backgroundDimView.alpha = 0
-            }, completion: nil)
+        }, completion: nil)
     }
     
     override func dismissalTransitionDidEnd(_ completed: Bool) {
@@ -331,7 +340,8 @@ extension HandyPresentationController {
             updateTopDistance()
         } else {
             scrollViewHeightConstraint?.constant = scrollViewHeight
-            self.topConstraint?.constant = self.topDistance - self.safeAreaInsets.bottom - self.safeAreaInsets.top
+            self.topConstraint?.constant = self.topDistance - self.safeAreaInsets.bottom -
+                self.safeAreaInsets.top
             animateDamping { [ weak self ] in
                 self?.containerView?.layoutIfNeeded()
             }
