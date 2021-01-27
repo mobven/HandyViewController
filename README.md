@@ -4,6 +4,7 @@
 
 [![Pod License](https://img.shields.io/github/license/mobven/HandyViewController)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![SwiftPM compatible](https://img.shields.io/badge/SwiftPM-compatible-brightgreen.svg)](https://swift.org/package-manager/)
+[![codebeat badge](https://codebeat.co/badges/fedc9793-5d0d-4577-b425-08f837b120e5)](https://codebeat.co/projects/github-com-mobven-handyviewcontroller-master)
 
 View controller transitioning allowing self-sizing presented view controller to be dismissed by swiping down.
 
