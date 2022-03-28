@@ -266,7 +266,7 @@ final class HandyPresentationController: UIPresentationController {
         ])
         
         coordinator.animate(alongsideTransition: { [ weak self ] _ in
-            self?.backgroundDimView.alpha = self?.maxBackgroundOpacity ?? 0.5
+            self?.backgroundDimView.alpha = 1
             self?.updateTopDistance()
         }, completion: nil)
     }
