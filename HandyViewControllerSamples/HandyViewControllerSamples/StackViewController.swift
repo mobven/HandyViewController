@@ -19,3 +19,9 @@ class StackViewController: UIViewController {
     }
     
 }
+
+extension StackViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.view.endEditing(false)
+    }
+}
