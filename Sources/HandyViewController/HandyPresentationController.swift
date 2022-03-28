@@ -191,7 +191,7 @@ final class HandyPresentationController: UIPresentationController {
     private func animatePanChange(translationY: CGFloat) {
         guard let presented = presentedView else { return }
         presented.frame.origin.y = topDistance - safeAreaInsets.bottom + translationY * 0.7 // speed
-        let yVal = (UIScreen.main.bounds.height - presented.frame.origin.y) / presented.frame.height
+        let yVal = (UIScreen.main.bounds.height - presented.frame.origin.y) / (presented.frame.height + keyboardHeight)
         backgroundDimView.backgroundColor = UIColor(
             white: 0, alpha: yVal - maxBackgroundOpacity
         )
