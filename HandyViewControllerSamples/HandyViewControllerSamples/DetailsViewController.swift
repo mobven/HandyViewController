@@ -12,8 +12,10 @@ import HandyViewController
 final class DetailsViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var data: [String] = []
+    var searchedData: [String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,12 +23,14 @@ final class DetailsViewController: UIViewController {
         for index in 1...5 {
             data.append("Cell no: \(index)")
         }
+        searchedData = data
     }
     
     @IBAction func addMoreItems() {
         for index in data.count...data.count+3 {
             data.append("Cell no: \(index)")
         }
+        searchedData = data
         tableView.reloadData()
     }
     
@@ -35,12 +39,12 @@ final class DetailsViewController: UIViewController {
 extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return searchedData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")
-        cell?.textLabel?.text = data[indexPath.row]
+        cell?.textLabel?.text = searchedData[indexPath.row]
         return cell!
     }
     
@@ -48,6 +52,24 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
         return 70
     }
     
+}
+
+extension DetailsViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        guard !searchText.isEmpty else {
+            searchedData = data
+            tableView.reloadData()
+            return
+        }
+        searchedData = data.filter {
+            $0.lowercased().contains(searchText.lowercased())
+        }
+        tableView.reloadData()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
 }
 
 extension DetailsViewController {
@@ -60,5 +82,4 @@ extension DetailsViewController {
                                    targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         handyScrollViewWillEndDragging(scrollView, withVelocity: velocity)
     }
-    
 }
