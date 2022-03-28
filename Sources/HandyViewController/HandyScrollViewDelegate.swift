@@ -10,7 +10,7 @@ import UIKit
 
 /// `UIScrollViewDelegate` actions listened by `HandScrollViewController`.
 @available(*, deprecated)
-public protocol HandyScrollViewDelegate: class {
+public protocol HandyScrollViewDelegate: AnyObject {
     /// Equivalent to `UIScrollViewDelegate.scrollViewDidScroll(:)` function.
     /// - parameter scrollView: Any `UIScrollView` child class, eg: `UITableView`
     func handyScrollViewDidScroll(_ scrollView: UIScrollView)
@@ -21,7 +21,7 @@ public protocol HandyScrollViewDelegate: class {
 }
 
 /// Internal delegate function for registering to `UIScrollView` content size changes.
-protocol HandyScrollViewContentSizeDelegate: class {
+protocol HandyScrollViewContentSizeDelegate: AnyObject {
     /// Registers for content size changes within specified scroll view.
     /// - parameter scrollView: `UIScrollView` to be registered.
     func registerHandyScrollView(_ scrollView: UIScrollView)

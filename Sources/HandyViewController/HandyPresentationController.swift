@@ -37,6 +37,16 @@ final class HandyPresentationController: UIPresentationController {
     
     private var contentSizeObserver: NSKeyValueObservation?
     
+    private var isKeyboardShown: Bool = false
+    
+    private var keyboardHeight: CGFloat = 0
+    
+    private enum SheetType {
+        case scrollView, stackView
+    }
+    
+    private var sheetType: SheetType?
+
     /// Background dim view with alpha value `maxBackgroundOpacity`.
     private lazy var backgroundDimView: UIView! = {
         guard let container = containerView else { return nil }
@@ -94,11 +104,33 @@ final class HandyPresentationController: UIPresentationController {
             equalToConstant: contentHeight
         )
         contentHeightConstraint?.isActive = true
+        
+        if contentMode == .contentSize {
+            addKeyboardObservers()
+        }
+    }
+
+    private func addKeyboardObservers() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(_:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(_:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
     }
     
     deinit {
         contentSizeObserver?.invalidate()
         contentSizeObserver = nil
+        if contentMode == .contentSize {
+            NotificationCenter.default.removeObserver(self)
+        }
     }
     
     private func updateTopDistance() {
@@ -159,7 +191,7 @@ final class HandyPresentationController: UIPresentationController {
     private func animatePanChange(translationY: CGFloat) {
         guard let presented = presentedView else { return }
         presented.frame.origin.y = topDistance - safeAreaInsets.bottom + translationY * 0.7 // speed
-        let yVal = (UIScreen.main.bounds.height - presented.frame.origin.y) / presented.frame.height
+        let yVal = (UIScreen.main.bounds.height - presented.frame.origin.y) / (presented.frame.height + keyboardHeight)
         backgroundDimView.backgroundColor = UIColor(
             white: 0, alpha: yVal - maxBackgroundOpacity
         )
@@ -256,13 +288,13 @@ final class HandyPresentationController: UIPresentationController {
             backgroundDimView.removeFromSuperview()
         }
     }
-    
 }
 
 extension HandyPresentationController: HandyScrollViewContentSizeDelegate {
     
     func registerHandyScrollView(_ scrollView: UIScrollView) {
         guard contentMode == .contentSize else { return }
+        sheetType = .scrollView
         scrollView.layoutIfNeeded()
         
         contentSizeObserver = scrollView.observe(\.contentSize, options: .new) { [ weak self ] scrollView, _ in
@@ -276,6 +308,7 @@ extension HandyPresentationController: HandyScrollViewContentSizeDelegate {
     /// - parameter stackView: `UIStackView` to be manipulated for height.
     func registerHandyStackView(_ stackView: UIStackView) {
         if stackView.alignment == .fill && stackView.distribution == .fill {
+            sheetType = .stackView
             let emptyFooterView = UIView()
             emptyFooterView.backgroundColor = .clear
             stackView.addArrangedSubview(emptyFooterView)
@@ -326,6 +359,10 @@ extension HandyPresentationController {
             scrollViewHeight = scrollViewContentHeight
         }
         
+        if isKeyboardShown, keyboardHeight + minimumTopDistance * 2 > topDistance {
+            scrollViewHeight -= keyboardHeight - topDistance + minimumTopDistance * 2
+        }
+
         if scrollViewHeight == -1 {
             scrollViewHeight = 0
         }
@@ -357,4 +394,44 @@ extension HandyPresentationController {
             options: .curveEaseInOut, animations: animations)
     }
     
+    private func updateSheetLocation(_ isKeyboardShown: Bool) {
+        if isKeyboardShown, keyboardHeight + minimumTopDistance * 2 > topDistance {
+            scrollViewHeight -= keyboardHeight - topDistance + minimumTopDistance * 2
+        } else if
+            !isKeyboardShown,
+                UIScreen.main.bounds.height - keyboardHeight - scrollViewHeight - contentHeight == minimumTopDistance {
+            switch sheetType {
+            case .scrollView:
+                scrollViewHeight = UIScreen.main.bounds.height - contentHeight - minimumTopDistance
+            case .stackView:
+                scrollViewHeight -= scrollViewHeight
+            default:
+                break
+            }
+        }
+        safeAreaInsets.bottom += isKeyboardShown ? keyboardHeight : -keyboardHeight
+        updateTopDistance()
+        contentHeightConstraint?.constant = contentHeight + scrollViewHeight
+        scrollViewHeightConstraint?.constant = scrollViewHeight
+        topConstraint?.constant = topDistance - safeAreaInsets.bottom - safeAreaInsets.top
+        animateDamping { [ weak self ] in
+            self?.containerView?.layoutIfNeeded()
+        }
+    }
+
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
+           !isKeyboardShown {
+            isKeyboardShown = true
+            keyboardHeight = keyboardFrame.cgRectValue.height
+            updateSheetLocation(isKeyboardShown)
+        }
+    }
+
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        if isKeyboardShown, !presentedViewController.isBeingDismissed {
+            isKeyboardShown = false
+            updateSheetLocation(isKeyboardShown)
+        }
+    }
 }
