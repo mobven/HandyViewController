@@ -14,11 +14,26 @@ final class DetailsViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
+    let pickerView = UIPickerView()
     var data: [String] = []
     var searchedData: [String] = []
+    var keyboard: KeyboardType = .standart
     
+    enum KeyboardType: CaseIterable {
+        case standart, numberPad, pickerView
+        
+        mutating func next() {
+            let allCases = type(of: self).allCases
+            self = allCases[(allCases.firstIndex(of: self)! + 1) % allCases.count]
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        pickerView.delegate = self
+        pickerView.dataSource = self
+        
         registerHandyScrollView(tableView)
         for index in 1...5 {
             data.append("Cell no: \(index)")
@@ -32,6 +47,24 @@ final class DetailsViewController: UIViewController {
         }
         searchedData = data
         tableView.reloadData()
+    }
+    
+    @IBAction func changeKeyboard() {
+        let textField = UITextField(frame: .zero)
+        textField.resignFirstResponder()
+        switch keyboard {
+        case .standart:
+            textField.inputView = .none
+            textField.keyboardType = .default
+        case .numberPad:
+            textField.inputView = .none
+            textField.keyboardType = .numberPad
+        case .pickerView:
+            textField.inputView = pickerView
+        }
+        view.addSubview(textField)
+        textField.becomeFirstResponder()
+        keyboard.next()
     }
     
 }
@@ -51,7 +84,20 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
     }
+}
+
+extension DetailsViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
     
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return searchedData.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+         return searchedData[row]
+    }
 }
 
 extension DetailsViewController: UISearchBarDelegate {
