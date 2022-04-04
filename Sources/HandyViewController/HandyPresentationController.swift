@@ -123,6 +123,12 @@ final class HandyPresentationController: UIPresentationController {
             name: UIResponder.keyboardWillHideNotification,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillChange(_:)),
+            name: UIResponder.keyboardWillChangeFrameNotification,
+            object: nil
+        )
     }
     
     deinit {
@@ -432,6 +438,19 @@ extension HandyPresentationController {
         if isKeyboardShown, !presentedViewController.isBeingDismissed {
             isKeyboardShown = false
             updateSheetLocation(isKeyboardShown)
+        }
+    }
+    
+    @objc private func keyboardWillChange(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
+        isKeyboardShown, !presentedViewController.isBeingDismissed {
+            let changedSize = keyboardFrame.cgRectValue.height - keyboardHeight
+            keyboardHeight = keyboardFrame.cgRectValue.height
+            safeAreaInsets.bottom += changedSize
+            topConstraint?.constant -= changedSize
+            animateDamping { [ weak self ] in
+                self?.containerView?.layoutIfNeeded()
+            }
         }
     }
 }

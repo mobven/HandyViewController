@@ -83,16 +83,6 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vda-Si-jia">
                                 <rect key="frame" x="10" y="44" width="394" height="818"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4KG-PL-Vgz">
-                                        <rect key="frame" x="20" y="20" width="354" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="qa6-TK-CeA"/>
-                                        </constraints>
-                                        <state key="normal" title="Add more items"/>
-                                        <connections>
-                                            <action selector="addMoreItems" destination="TSc-dY-F88" eventType="touchUpInside" id="Qh1-oX-X9e"/>
-                                        </connections>
-                                    </button>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="NrC-y6-Ucc">
                                         <rect key="frame" x="0.0" y="120" width="394" height="698"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -121,19 +111,43 @@
                                             <outlet property="delegate" destination="TSc-dY-F88" id="gas-01-AAV"/>
                                         </connections>
                                     </searchBar>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Nro-u4-Gbt">
+                                        <rect key="frame" x="20" y="20" width="354" height="30"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Pg-ra-MH7">
+                                                <rect key="frame" x="0.0" y="0.0" width="177" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                <state key="normal" title="Change Keyboard"/>
+                                                <connections>
+                                                    <action selector="changeKeyboard" destination="TSc-dY-F88" eventType="touchUpInside" id="Sum-1Q-TsL"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4KG-PL-Vgz">
+                                                <rect key="frame" x="177" y="0.0" width="177" height="30"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="30" id="snt-3H-nkS"/>
+                                                </constraints>
+                                                <state key="normal" title="Add more items"/>
+                                                <connections>
+                                                    <action selector="addMoreItems" destination="TSc-dY-F88" eventType="touchUpInside" id="Qh1-oX-X9e"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="NrC-y6-Ucc" firstAttribute="leading" secondItem="Vda-Si-jia" secondAttribute="leading" id="3ZS-wp-8Ha"/>
-                                    <constraint firstItem="4KG-PL-Vgz" firstAttribute="leading" secondItem="Vda-Si-jia" secondAttribute="leading" constant="20" id="4CR-ah-c4b"/>
-                                    <constraint firstAttribute="trailing" secondItem="4KG-PL-Vgz" secondAttribute="trailing" constant="20" id="6dx-mr-eDZ"/>
                                     <constraint firstAttribute="bottom" secondItem="NrC-y6-Ucc" secondAttribute="bottom" priority="990" id="AXf-EW-vfR"/>
-                                    <constraint firstItem="4KG-PL-Vgz" firstAttribute="top" secondItem="Vda-Si-jia" secondAttribute="top" constant="20" id="D07-f9-3eV"/>
+                                    <constraint firstAttribute="trailing" secondItem="Nro-u4-Gbt" secondAttribute="trailing" constant="20" id="CCO-yh-84a"/>
                                     <constraint firstAttribute="trailing" secondItem="Bkm-BJ-qak" secondAttribute="trailing" id="Dt5-4f-FlI"/>
                                     <constraint firstItem="Bkm-BJ-qak" firstAttribute="leading" secondItem="Vda-Si-jia" secondAttribute="leading" id="W4n-bm-MAQ"/>
                                     <constraint firstAttribute="trailing" secondItem="NrC-y6-Ucc" secondAttribute="trailing" id="goZ-Rn-NFQ"/>
+                                    <constraint firstItem="Nro-u4-Gbt" firstAttribute="top" secondItem="Vda-Si-jia" secondAttribute="top" constant="20" id="hS9-oi-ldC"/>
+                                    <constraint firstItem="Nro-u4-Gbt" firstAttribute="leading" secondItem="Vda-Si-jia" secondAttribute="leading" constant="20" id="i5D-pN-vLY"/>
                                     <constraint firstItem="NrC-y6-Ucc" firstAttribute="top" secondItem="Bkm-BJ-qak" secondAttribute="bottom" id="kY5-x5-ghb"/>
-                                    <constraint firstItem="Bkm-BJ-qak" firstAttribute="top" secondItem="4KG-PL-Vgz" secondAttribute="bottom" constant="20" id="ogq-wN-MVi"/>
+                                    <constraint firstItem="Bkm-BJ-qak" firstAttribute="top" secondItem="Nro-u4-Gbt" secondAttribute="bottom" constant="20" id="rF9-UB-M2T"/>
                                 </constraints>
                             </view>
                         </subviews>
