@@ -14,15 +14,17 @@ public final class HandyTransitioningDelegate: NSObject {
     internal var contentMode: ContentMode = .contentSize
     internal var scrollView: UIScrollView?
     internal var stackView: UIStackView?
+    internal var syncViewHeightWithKeyboard: Bool = true
     
     /// Initializes transitioing delegate.
     /// - parameter presented: View controller presenting HandyViewController.
     /// - parameter presenting: View controller being presented.
     /// - parameter contentMode: Content mode of HandyViewController.
     public init(from presented: UIViewController, to presenting: UIViewController,
-                contentMode: ContentMode = .contentSize) {
+                contentMode: ContentMode = .contentSize, syncViewHeightWithKeyboard: Bool = true) {
         super.init()
         self.contentMode = contentMode
+        self.syncViewHeightWithKeyboard = syncViewHeightWithKeyboard
     }
     
     internal func registerHandyScrollView(_ scrollView: UIScrollView) {
@@ -64,7 +66,8 @@ extension HandyTransitioningDelegate: UIViewControllerTransitioningDelegate {
         let controller = HandyPresentationController(presentedViewController: presented,
                                                      presenting: presenting,
                                                      safeAreaInsets: safeAreaInsets,
-                                                     contentMode: contentMode)
+                                                     contentMode: contentMode,
+                                                     syncViewHeightWithKeyboard: syncViewHeightWithKeyboard)
         scrollViewContentSizeDelegate = controller
         if let scrollView = scrollView {
             scrollViewContentSizeDelegate?.registerHandyScrollView(scrollView)

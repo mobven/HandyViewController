@@ -32,6 +32,8 @@ final class HandyPresentationController: UIPresentationController {
     private weak var topConstraint: NSLayoutConstraint?
     /// Height constraint of the scroll view. Changes depending on `scrollViewHeight`
     private weak var scrollViewHeightConstraint: NSLayoutConstraint?
+    /// If you don't want to resize of the bottom sheet with the keyboard movement, choose false.....
+    private var syncViewHeightWithKeyboard: Bool = true
     
     private var isSwipableAnimating: Bool = false
     
@@ -76,9 +78,11 @@ final class HandyPresentationController: UIPresentationController {
     required init(presentedViewController: UIViewController,
                   presenting presentingViewController: UIViewController?,
                   safeAreaInsets: UIEdgeInsets,
-                  contentMode: ContentMode) {
+                  contentMode: ContentMode,
+                  syncViewHeightWithKeyboard: Bool) {
         self.contentMode = contentMode
         self.safeAreaInsets = safeAreaInsets
+        self.syncViewHeightWithKeyboard = syncViewHeightWithKeyboard
         
         super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
         
@@ -105,7 +109,7 @@ final class HandyPresentationController: UIPresentationController {
         )
         contentHeightConstraint?.isActive = true
         
-        if contentMode == .contentSize {
+        if contentMode == .contentSize, syncViewHeightWithKeyboard {
             addKeyboardObservers()
         }
     }
