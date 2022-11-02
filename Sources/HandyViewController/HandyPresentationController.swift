@@ -15,7 +15,7 @@ final class HandyPresentationController: UIPresentationController {
     /// Content mode for the presented view controller.
     private var contentMode: ContentMode = .contentSize
     
-    private let maxBackgroundOpacity: CGFloat = 0.5
+    private var maxBackgroundOpacity: CGFloat = 0.5
     
     /// Calculated content height of the presented view controller's root view, excluding `scrollViewHeight`.
     private var contentHeight: CGFloat!
@@ -79,10 +79,13 @@ final class HandyPresentationController: UIPresentationController {
                   presenting presentingViewController: UIViewController?,
                   safeAreaInsets: UIEdgeInsets,
                   contentMode: ContentMode,
-                  syncViewHeightWithKeyboard: Bool) {
+                  syncViewHeightWithKeyboard: Bool,
+                  maxBackgroundOpacity: CGFloat
+    ) {
         self.contentMode = contentMode
         self.safeAreaInsets = safeAreaInsets
         self.syncViewHeightWithKeyboard = syncViewHeightWithKeyboard
+        self.maxBackgroundOpacity = maxBackgroundOpacity
         
         super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
         
@@ -202,7 +205,7 @@ final class HandyPresentationController: UIPresentationController {
         guard let presented = presentedView else { return }
         presented.frame.origin.y = topDistance - safeAreaInsets.bottom + translationY * 0.7 // speed
         let yVal = (UIScreen.main.bounds.height - presented.frame.origin.y) / (presented.frame.height + keyboardHeight)
-        backgroundDimView.backgroundColor = UIColor(
+        backgroundDimView.backgroundColor = maxBackgroundOpacity == 0 ? .clear : UIColor(
             white: 0, alpha: yVal - maxBackgroundOpacity
         )
     }
