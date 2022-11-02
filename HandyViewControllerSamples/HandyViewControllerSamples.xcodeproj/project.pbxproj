@@ -478,7 +478,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mobven.ios.HandyViewControllerSamples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -498,7 +498,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mobven.ios.HandyViewControllerSamples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -512,6 +512,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = RE9892F24F;
 				INFOPLIST_FILE = HandyViewControllerSamplesTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
@@ -534,6 +535,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = RE9892F24F;
 				INFOPLIST_FILE = HandyViewControllerSamplesTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
