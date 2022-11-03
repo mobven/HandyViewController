@@ -21,6 +21,8 @@ public final class HandyTransitioningDelegate: NSObject {
     /// - parameter presented: View controller presenting HandyViewController.
     /// - parameter presenting: View controller being presented.
     /// - parameter contentMode: Content mode of HandyViewController.
+    /// - parameter syncViewHeightWithKeyboard: When the keyboard is showed, view scrolls up with the keyboard.
+    /// - parameter maxBackgroundOpacity: Change background dim opacity, set zero to turn it off.
     public init(
         from presented: UIViewController,
         to presenting: UIViewController,
