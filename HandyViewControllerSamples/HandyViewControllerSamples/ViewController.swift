@@ -47,4 +47,12 @@ class ViewController: UIViewController {
         present(controller, animated: true)
     }
     
+    @IBAction private func presentBackgroundDimOffController() {
+        let controller = storyboard!.instantiateViewController(withIdentifier: "VeryShortHandyViewController")
+        let transitioningDelegate = HandyTransitioningDelegate(from: self, to: controller, maxBackgroundOpacity: 0)
+        controller.modalPresentationStyle = .custom
+        controller.transitioningDelegate = transitioningDelegate
+        present(controller, animated: true)
+    }
+    
 }

@@ -15,16 +15,25 @@ public final class HandyTransitioningDelegate: NSObject {
     internal var scrollView: UIScrollView?
     internal var stackView: UIStackView?
     internal var syncViewHeightWithKeyboard: Bool = true
+    internal var maxBackgroundOpacity: CGFloat = 0.5
     
     /// Initializes transitioing delegate.
     /// - parameter presented: View controller presenting HandyViewController.
     /// - parameter presenting: View controller being presented.
     /// - parameter contentMode: Content mode of HandyViewController.
-    public init(from presented: UIViewController, to presenting: UIViewController,
-                contentMode: ContentMode = .contentSize, syncViewHeightWithKeyboard: Bool = true) {
+    /// - parameter syncViewHeightWithKeyboard: When the keyboard is showed, view scrolls up with the keyboard.
+    /// - parameter maxBackgroundOpacity: Change background dim opacity, set zero to turn it off.
+    public init(
+        from presented: UIViewController,
+        to presenting: UIViewController,
+        contentMode: ContentMode = .contentSize,
+        syncViewHeightWithKeyboard: Bool = true,
+        maxBackgroundOpacity: CGFloat = 0.5
+    ) {
         super.init()
         self.contentMode = contentMode
         self.syncViewHeightWithKeyboard = syncViewHeightWithKeyboard
+        self.maxBackgroundOpacity = maxBackgroundOpacity
     }
     
     internal func registerHandyScrollView(_ scrollView: UIScrollView) {
@@ -67,7 +76,9 @@ extension HandyTransitioningDelegate: UIViewControllerTransitioningDelegate {
                                                      presenting: presenting,
                                                      safeAreaInsets: safeAreaInsets,
                                                      contentMode: contentMode,
-                                                     syncViewHeightWithKeyboard: syncViewHeightWithKeyboard)
+                                                     syncViewHeightWithKeyboard: syncViewHeightWithKeyboard,
+                                                     maxBackgroundOpacity: maxBackgroundOpacity
+        )
         scrollViewContentSizeDelegate = controller
         if let scrollView = scrollView {
             scrollViewContentSizeDelegate?.registerHandyScrollView(scrollView)

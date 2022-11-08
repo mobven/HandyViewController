@@ -38,6 +38,15 @@ controller.transitioningDelegate = transitioningDelegate
 present(controller, animated: true)
 ```
 
+## Parameters
+```
+presented: View controller presenting HandyViewController.
+presenting: View controller being presented.
+contentMode: Content mode of HandyViewController.
+syncViewHeightWithKeyboard: When the keyboard is showed, view scrolls up with the keyboard.
+maxBackgroundOpacity: Change background dim opacity, set zero to turn it off.
+```
+
 ### Full Screen
 View controller displayed full screen with a small padding in the top.
 ```swift
