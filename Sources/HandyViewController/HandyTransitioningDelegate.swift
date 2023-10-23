@@ -16,6 +16,7 @@ public final class HandyTransitioningDelegate: NSObject {
     internal var stackView: UIStackView?
     internal var syncViewHeightWithKeyboard: Bool = true
     internal var maxBackgroundOpacity: CGFloat = 0.5
+    internal var presentedViewControllerRadius: CGFloat = 10
     
     /// Initializes transitioing delegate.
     /// - parameter presented: View controller presenting HandyViewController.
@@ -28,10 +29,12 @@ public final class HandyTransitioningDelegate: NSObject {
         to presenting: UIViewController,
         contentMode: ContentMode = .contentSize,
         syncViewHeightWithKeyboard: Bool = true,
-        maxBackgroundOpacity: CGFloat = 0.5
+        maxBackgroundOpacity: CGFloat = 0.5,
+        presentedViewControllerRadius: CGFloat = 10
     ) {
         super.init()
         self.contentMode = contentMode
+        self.presentedViewControllerRadius = presentedViewControllerRadius
         self.syncViewHeightWithKeyboard = syncViewHeightWithKeyboard
         self.maxBackgroundOpacity = maxBackgroundOpacity
     }
@@ -77,7 +80,8 @@ extension HandyTransitioningDelegate: UIViewControllerTransitioningDelegate {
                                                      safeAreaInsets: safeAreaInsets,
                                                      contentMode: contentMode,
                                                      syncViewHeightWithKeyboard: syncViewHeightWithKeyboard,
-                                                     maxBackgroundOpacity: maxBackgroundOpacity
+                                                     maxBackgroundOpacity: maxBackgroundOpacity,
+                                                     cornerRadius: presentedViewControllerRadius
         )
         scrollViewContentSizeDelegate = controller
         if let scrollView = scrollView {

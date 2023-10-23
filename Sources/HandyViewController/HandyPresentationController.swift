@@ -80,7 +80,8 @@ final class HandyPresentationController: UIPresentationController {
                   safeAreaInsets: UIEdgeInsets,
                   contentMode: ContentMode,
                   syncViewHeightWithKeyboard: Bool,
-                  maxBackgroundOpacity: CGFloat
+                  maxBackgroundOpacity: CGFloat,
+                  cornerRadius: CGFloat
     ) {
         self.contentMode = contentMode
         self.safeAreaInsets = safeAreaInsets
@@ -93,7 +94,7 @@ final class HandyPresentationController: UIPresentationController {
             UIPanGestureRecognizer(target: self, action: #selector(didPan(_:)))
         )
         
-        presentedViewController.view.layer.cornerRadius = 10
+        presentedViewController.view.layer.cornerRadius = cornerRadius
         presentedViewController.view.layer.masksToBounds = true
         presentedViewController.view.translatesAutoresizingMaskIntoConstraints = false
         presentedViewController.view.widthAnchor.constraint(
